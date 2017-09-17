@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "auth0-js": "^8.9.3",
+    "axios": "^0.16.2",
     "bootstrap": "^3.3.7",
     "eslint-config-defaults": "^9.0.0",
     "react": "^15.6.1",

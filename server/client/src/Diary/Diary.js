@@ -9,12 +9,19 @@ import { ControlLabel } from 'react-bootstrap';
 import '../App.css';
 
 class Diary extends Component {
-  state = { users: [], value: 0 }
-
-  getInitialState() {
-    return {
-      value: ''
-    };
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: '',
+      mmolvalue: '',
+      slowTerapy: '',
+      fastTerapy: '',
+      calories: '',
+      foodType: ''
+    };    
+    this.getValidationState = this.getValidationState.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   componentDidMount() {
@@ -23,30 +30,39 @@ class Diary extends Component {
     //   .then(users => this.setState({ users }));
   }
 
-  getValidationState() {
-    const length = this.state.value.length;
-    if (length > 10) return 'success';
-    else if (length > 5) return 'warning';
-    else if (length > 0) return 'error';
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
   }
 
-  handleChange(e) {
-    this.setState({ value: e.target.value });
+  getValidationState() {
+    // const length = this.state.value.length;
+    // if (length > 10) return 'success';
+    // else if (length > 5) return 'warning';
+    // else if (length > 0) return 'error';
   }
 
   handleSubmit(event) {
-    if (this.refs.titleInput !== '') {
-      event.preventDefault();
-      var log = {
-        title : this.refs.titleInput.value
-      }
+    event.preventDefault();
 
-      return this.props.dispatch(this.addLog(log));
-    }
+    var _this = this;
+    console.log(_this.state.value);
+    // if (this.refs.titleInput !== '') {     
+    //   var log = {
+    //     title: this.refs.titleInput.value
+    //   };
+    //   return this.props.dispatch(this.addLog(log));
+    // }
   }
 
-  addLog(log){
-    this.title = log.title;
+  // redux action
+  addLog(log) {
+    return { type: 'LogValue', title: log.title };
   }
 
   login() {
@@ -75,27 +91,27 @@ class Diary extends Component {
                   <Row className="show-grid">
                     <Col xs={9} md={6} lg={6} style={divStyle}>
                       <ControlLabel>value</ControlLabel>
-                      <FormControl type="number" value={this.state.value} placeholder="value" onChange={this.handleChange} /></Col>
+                      <FormControl type="number" name="value" value={this.state.value} onChange={this.handleInputChange} placeholder="value" /></Col>
                     <Col xs={9} md={6} lg={6} style={divStyle}>
                       <ControlLabel>mmol value</ControlLabel>
-                      <FormControl type="number" value={this.state.value} placeholder="mmol value" onChange={this.handleChange} /></Col>
+                      <FormControl type="number" name="mmolvalue" value={this.state.mmolvalue} onChange={this.handleInputChange} placeholder="mmol value" /></Col>
                   </Row>
                   <Row className="show-grid">
                     <Col xs={9} md={6} lg={6} style={divStyle}>
                       <ControlLabel>Slow terapy number</ControlLabel>
-                      <FormControl type="number" value={this.state.value} placeholder="slow terapy number" onChange={this.handleChange} /></Col>
+                      <FormControl type="number" name="slowTerapy" value={this.state.slowTerapy} onChange={this.handleInputChange} placeholder="slow terapy number" /></Col>
                     <Col xs={9} md={6} lg={6} style={divStyle}>
                       <ControlLabel>Fast terapy number</ControlLabel>
-                      <FormControl type="number" value={this.state.value} placeholder="fast terapy number" onChange={this.handleChange} /></Col>
+                      <FormControl type="number" name="fastTerapy" value={this.state.fastTerapy} onChange={this.handleInputChange} placeholder="fast terapy number" /></Col>
                   </Row>
                   <Row className="show-grid">
                     <Col xs={9} md={6} lg={6} style={divStyle}>
                       <ControlLabel>Calories</ControlLabel>
-                      <FormControl type="number" value={this.state.value} placeholder="calories" onChange={this.handleChange} /></Col>
+                      <FormControl type="number" name="calories" value={this.state.calories} onChange={this.handleInputChange} placeholder="calories" /></Col>
                     <Col xs={9} md={6} lg={6} style={divStyle}>
                       <ControlLabel>Food types</ControlLabel>
                       <FormGroup controlId="formControlsSelect">
-                        <FormControl componentClass="select" placeholder="select">
+                        <FormControl componentClass="select" name="foodType" value={this.state.foodType} onChange={this.handleInputChange} placeholder="select FoodType">
                           <option value="select">select</option>
                           <option value="other">Fruits</option>
                           <option value="other">Snack</option>
@@ -107,7 +123,7 @@ class Diary extends Component {
                   </Row>
                   <Row className="show-grid">
                     <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <Button bsStyle="primary">Submit</Button>
+                      <Button bsStyle="primary" type="submit">Submit</Button>
                     </Col>
                     <Col xs={9} md={6} lg={6} style={divStyle}>
                       <Button bsStyle="warning">Reset</Button>
@@ -120,17 +136,17 @@ class Diary extends Component {
         }
         {
           !isAuthenticated() && (
-              <h4>
-                You are not logged in! Please{' '}
-                <a
-                    style={{ cursor: 'pointer' }}
-                    onClick={this.login.bind(this)}
-                >
-                  Log In
+            <h4>
+              You are not logged in! Please{' '}
+              <a
+                style={{ cursor: 'pointer' }}
+                onClick={this.login.bind(this)}
+              >
+                Log In
                 </a>
-                {' '}to continue.
+              {' '}to continue.
               </h4>
-            )
+          )
         }
       </div>
       // <div className="App">
