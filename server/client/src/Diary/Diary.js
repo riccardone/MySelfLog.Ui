@@ -6,6 +6,7 @@ import { Col } from 'react-bootstrap';
 import { FormGroup } from 'react-bootstrap';
 import { FormControl } from 'react-bootstrap';
 import { ControlLabel } from 'react-bootstrap';
+import Fetch from 'react-fetch';
 import '../App.css';
 
 class Diary extends Component {
@@ -49,15 +50,22 @@ class Diary extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-
     var _this = this;
-    console.log(_this.state.value);
-    // if (this.refs.titleInput !== '') {     
-    //   var log = {
-    //     title: this.refs.titleInput.value
-    //   };
-    //   return this.props.dispatch(this.addLog(log));
-    // }
+    fetch('http://localhost:3001', {  
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        value: _this.state.value,
+        mmolvalue: _this.state.mmolvalue,
+        slowTerapy: _this.state.slowTerapy,
+        fastTerapy: _this.state.fastTerapy,
+        calories: _this.state.calories,
+        foodType: _this.state.foodType
+      })
+    });
   }
 
   // redux action
