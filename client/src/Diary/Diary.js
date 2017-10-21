@@ -8,6 +8,12 @@ import { FormControl } from 'react-bootstrap';
 import { ControlLabel } from 'react-bootstrap';
 import Fetch from 'react-fetch';
 import '../App.css';
+const uuidv4 = require('uuid/v4');
+
+// deterministic
+// const uuidv5 = require('uuid/v5');
+//const MY_NAMESPACE = '<UUID fbf4a1a1-b4a3-4dfe-a01f-ec52c34e16e5>';
+//uuidv5('Hello, World!', MY_NAMESPACE); // -> '90123e1c-7512-523e-bb28-76fab9f2f73d'
 
 class Diary extends Component {
   constructor(props) {
@@ -19,7 +25,7 @@ class Diary extends Component {
       fastTerapy: '',
       calories: '',
       foodType: ''
-    };    
+    };
     this.getValidationState = this.getValidationState.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -51,20 +57,29 @@ class Diary extends Component {
   handleSubmit(event) {
     event.preventDefault();
     var _this = this;
-    fetch('http://localhost:3001/api/v1/values', {  
+    fetch('http://localhost:2113/streams/values-myselflog', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/vnd.eventstore.events+json'
       },
-      body: JSON.stringify({
-        value: _this.state.value,
-        mmolvalue: _this.state.mmolvalue,
-        slowTerapy: _this.state.slowTerapy,
-        fastTerapy: _this.state.fastTerapy,
-        calories: _this.state.calories,
-        foodType: _this.state.foodType
-      })
+      body: JSON.stringify(        
+        [
+          {
+            "eventId": uuidv4(),
+            "eventType": "SelfLogValueReceived",
+            "data": {
+              value: _this.state.value,
+              mmolvalue: _this.state.mmolvalue,
+              slowTerapy: _this.state.slowTerapy,
+              fastTerapy: _this.state.fastTerapy,
+              calories: _this.state.calories,
+              foodType: _this.state.foodType,
+              source: "myselflog ui"
+            }
+          }
+        ]
+      )
     }).then((response) => console.log(response));
   }
   // https://stackoverflow.com/a/40635229
