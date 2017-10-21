@@ -51,7 +51,7 @@ class Diary extends Component {
   handleSubmit(event) {
     event.preventDefault();
     var _this = this;
-    fetch('http://localhost:3001', {  
+    fetch('http://localhost:3001/api/v1/values', {  
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -65,8 +65,9 @@ class Diary extends Component {
         calories: _this.state.calories,
         foodType: _this.state.foodType
       })
-    });
+    }).then((response) => console.log(response));
   }
+  // https://stackoverflow.com/a/40635229
 
   // redux action
   addLog(log) {
