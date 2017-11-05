@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
-import { Grid } from 'react-bootstrap';
-import { Row } from 'react-bootstrap';
-import { Col } from 'react-bootstrap';
-import { FormGroup } from 'react-bootstrap';
-import { FormControl } from 'react-bootstrap';
-import { ControlLabel } from 'react-bootstrap';
+import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import Fetch from 'react-fetch';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 import '../App.css';
 const uuidv4 = require('uuid/v4');
+var moment = require('moment');
 
 // deterministic
 // const uuidv5 = require('uuid/v5');
@@ -24,7 +21,7 @@ class Diary extends Component {
       slowTerapy: '',
       fastTerapy: '',
       calories: '',
-      foodType: ''
+      comment: ''
     };
     this.getValidationState = this.getValidationState.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,8 +36,8 @@ class Diary extends Component {
 
   handleInputChange(event) {
     const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
 
     this.setState({
       [name]: value
@@ -48,22 +45,58 @@ class Diary extends Component {
   }
 
   getValidationState() {
-    // const length = this.state.value.length;
-    // if (length > 10) return 'success';
-    // else if (length > 5) return 'warning';
-    // else if (length > 0) return 'error';
+    var isValid = true;
+    const fastTerapy = this.state.value.length;
+
+    if (this.state.value > 0 && this.state.value < 20) return 'warning: value is very low';
+    else if (this.state.value < 10) return 'error: value is too low';
+    else if (this.state.value > 800) return 'error: value is too high';
+
+    if (this.state.value > 0 && this.state.mmolvalue < 2) return 'warning: mmolvalue is very low';
+    else if (this.state.mmolvalue < 1) return 'error: mmolvalue is too low';
+    else if (this.state.mmolvalue > 35) return 'error: mmolvalue is too high';
+
+    if (this.state.value > 0 && this.state.slowTerapy < 3) return 'warning: slow terapy is very low';
+    else if (this.state.slowTerapy < 2) return 'error: slow terapy is too low';
+    else if (this.state.slowTerapy > 150) return 'error: slow terapy is too high';
+
+    if (this.state.value > 0 && this.state.fastTerapy < 2) return 'warning: fast terapy is very low';
+    else if (this.state.fastTerapy < 1) return 'error: fast terapy is too low';
+    else if (this.state.fastTerapy > 60) return 'error: fast terapy is too high';
+
+    return isValid;
+  }
+
+  getCorrelationId(){
+    return localStorage.getItem('profileId').replace("|", "_");
+  }
+
+  cleanString(str){
+    // Remove uri's and illegal chars
+    return str.replace(/(?:https?|ftp):\/\/[\n\S]+/g, "").replace(/[|&;$%@"<>()+,]/g, "");
   }
 
   handleSubmit(event) {
     event.preventDefault();
+    // var isValid = this.getValidationState();
+    // if (isValid !== true) {
+    //   console.error(isValid);
+    //   toast(isValid);
+    //   return;
+    // }
+    //var profileId = localStorage.getItem('profileId');
+    var profileName = localStorage.getItem('profileName');
+    var profileNickname = localStorage.getItem('profileNickname');
+
     var _this = this;
-    fetch('http://localhost:2113/streams/values-myselflog', {
+    var boh = _this.state.foodType;
+    fetch('http://localhost:2113/streams/diary-input', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/vnd.eventstore.events+json'
       },
-      body: JSON.stringify(        
+      body: JSON.stringify(
         [
           {
             "eventId": uuidv4(),
@@ -74,20 +107,30 @@ class Diary extends Component {
               slowTerapy: _this.state.slowTerapy,
               fastTerapy: _this.state.fastTerapy,
               calories: _this.state.calories,
-              foodType: _this.state.foodType,
-              source: "myselflog ui"
+              comment: this.cleanString(_this.state.comment)
+            },
+            "metadata": {              
+              profileName: profileName,
+              profileNickname: profileNickname,
+              applies: moment.utc().toDate().toUTCString(),
+              reverses: null,
+              source: 'myselflog-ui',
+              $correlationId: this.getCorrelationId()              
             }
           }
         ]
       )
-    }).then((response) => console.log(response));
+    }).then((response) => {
+      toast.info("Logs sent correctly");
+      this.myFormRef.reset();
+    });
   }
   // https://stackoverflow.com/a/40635229
 
   // redux action
   addLog(log) {
     return { type: 'LogValue', title: log.title };
-  }
+  }  
 
   login() {
     this.props.auth.login();
@@ -106,9 +149,13 @@ class Diary extends Component {
 
     return (
       <div className="container">
+        <ToastContainer
+          hideProgressBar={true}
+          newestOnTop={true}
+        />
         {
           isAuthenticated() && (
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={this.handleSubmit} ref={(el) => this.myFormRef = el}>
               <h2>Diary</h2>
               <FormGroup controlId="formBasicText" validationState={this.getValidationState()}>
                 <Grid>
@@ -133,19 +180,12 @@ class Diary extends Component {
                       <ControlLabel>Calories</ControlLabel>
                       <FormControl type="number" name="calories" value={this.state.calories} onChange={this.handleInputChange} placeholder="calories" /></Col>
                     <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <ControlLabel>Food types</ControlLabel>
-                      <FormGroup controlId="formControlsSelect">
-                        <FormControl componentClass="select" name="foodType" value={this.state.foodType} onChange={this.handleInputChange} placeholder="select FoodType">
-                          <option value="select">select</option>
-                          <option value="other">Fruits</option>
-                          <option value="other">Snack</option>
-                          <option value="other">Lunch</option>
-                          <option value="other">Dinner</option>
-                        </FormControl>
-                      </FormGroup>
+                      <ControlLabel>Comment</ControlLabel>
+                      <FormControl name="comment" componentClass="textarea" value={this.state.comment} onChange={this.handleInputChange} placeholder="comment" maxLength="400" />                     
                     </Col>
                   </Row>
                   <Row className="show-grid">
+                    <br />
                     <Col xs={9} md={6} lg={6} style={divStyle}>
                       <Button bsStyle="primary" type="submit">Submit</Button>
                     </Col>

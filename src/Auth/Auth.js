@@ -9,7 +9,7 @@ export default class Auth {
     redirectUri: AUTH_CONFIG.callbackUrl,
     audience: `https://${AUTH_CONFIG.domain}/userinfo`,
     responseType: 'token id_token',
-    scope: 'openid'
+    scope: 'openid profile'
   });
 
   constructor() {
@@ -23,11 +23,27 @@ export default class Auth {
     this.auth0.authorize();
   }
 
+
   handleAuthentication() {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        this.setSession(authResult);
-        history.replace('/home');
+        this.auth0.client.userInfo(authResult.accessToken, function (err, profile) {
+          if (profile) {
+            authResult.profile = profile;
+            // Set the time that the access token will expire at
+            let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+            localStorage.setItem('access_token', authResult.accessToken);
+            localStorage.setItem('id_token', authResult.idToken);
+            localStorage.setItem('expires_at', expiresAt);
+            localStorage.setItem('profileId', authResult.profile.sub);
+            localStorage.setItem('profileName', authResult.profile.name);
+            localStorage.setItem('profileNickname', authResult.profile.nickname);
+            // navigate to the home route
+            history.replace('/home');
+          } else {
+            console.log("client.userInfo is null");
+          }
+        });
       } else if (err) {
         history.replace('/home');
         console.log(err);
@@ -36,14 +52,16 @@ export default class Auth {
     });
   }
 
-  setSession(authResult) {
-    // Set the time that the access token will expire at
-    let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-    localStorage.setItem('access_token', authResult.accessToken);
-    localStorage.setItem('id_token', authResult.idToken);
-    localStorage.setItem('expires_at', expiresAt);
-    // navigate to the home route
-    history.replace('/home');
+
+
+  getProfile() {
+    return new Promise((resolve, reject) => {
+      var accessToken = localStorage.getItem('access_token');
+      if (!accessToken) {
+        reject("Access token must exist to fetch profile");
+      }
+
+    });
   }
 
   logout() {
