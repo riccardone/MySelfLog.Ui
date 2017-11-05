@@ -107,11 +107,11 @@ class Diary extends Component {
               slowTerapy: _this.state.slowTerapy,
               fastTerapy: _this.state.fastTerapy,
               calories: _this.state.calories,
-              comment: this.cleanString(_this.state.comment)
-            },
-            "metadata": {              
+              comment: this.cleanString(_this.state.comment),
               profileName: profileName,
-              profileNickname: profileNickname,
+              profileNickname: profileNickname
+            },
+            "metadata": {  
               applies: moment.utc().toDate().toUTCString(),
               reverses: null,
               source: 'myselflog-ui',
