@@ -69,11 +69,11 @@ class Diary extends Component {
     return isValid;
   }
 
-  getCorrelationId(){
+  getCorrelationId() {
     return localStorage.getItem('profileId').replace("|", "_");
   }
 
-  cleanString(str){
+  cleanString(str) {
     // Remove uri's and illegal chars
     return str.replace(/(?:https?|ftp):\/\/[\n\S]+/g, "").replace(/[|&;$%@"<>()+,]/g, "");
   }
@@ -87,23 +87,14 @@ class Diary extends Component {
     //   return;
     // }
     //var profileId = localStorage.getItem('profileId');
-    
-    var body = this.buildBody();
-    bus.publish("bodyLogBuilt", body);
-    
-    // TODO move the post into another module maybe in that module using a queue and publishing the waiting messages one by one
-    fetch('http://localhost:2113/streams/diary-input', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/vnd.eventstore.events+json'
-      },
-      body: JSON.stringify(
-        body
-      )
-    }).then((response) => {
-      toast.info("Logs sent correctly");      
+
+    var _this = this;
+    // TODO use react redux instead of your silly bus (it's already configured in routes...)
+    bus.publish("bodyLogBuilt", _this.state).then((response) => {
+      toast.info("Logs sent correctly");
       this.myFormRef.reset();
+    }).catch(err => {
+      toast.error(err);
     });
   }
   // https://stackoverflow.com/a/40635229
@@ -111,34 +102,6 @@ class Diary extends Component {
   // redux action
   addLog(log) {
     return { type: 'LogValue', title: log.title };
-  }  
-
-  buildBody(){
-    var _this = this;  
-    var profileName = localStorage.getItem('profileName');
-    var profileNickname = localStorage.getItem('profileNickname');
-    return [
-      {
-        "eventId": uuidv4(),
-        "eventType": "SelfLogValueReceived",
-        "data": {
-          value: _this.state.value,
-          mmolvalue: _this.state.mmolvalue,
-          slowTerapy: _this.state.slowTerapy,
-          fastTerapy: _this.state.fastTerapy,
-          calories: _this.state.calories,
-          comment: this.cleanString(_this.state.comment),
-          profileName: profileName,
-          profileNickname: profileNickname
-        },
-        "metadata": {  
-          applies: moment.utc().toDate().toUTCString(),
-          reverses: null,
-          source: 'myselflog-ui',
-          $correlationId: this.getCorrelationId()              
-        }
-      }
-    ];
   }
 
   login() {
@@ -190,7 +153,7 @@ class Diary extends Component {
                       <FormControl type="number" name="calories" value={this.state.calories} onChange={this.handleInputChange} placeholder="calories" /></Col>
                     <Col xs={9} md={6} lg={6} style={divStyle}>
                       <ControlLabel>Comment</ControlLabel>
-                      <FormControl name="comment" componentClass="textarea" value={this.state.comment} onChange={this.handleInputChange} placeholder="comment" maxLength="400" />                     
+                      <FormControl name="comment" componentClass="textarea" value={this.state.comment} onChange={this.handleInputChange} placeholder="comment" maxLength="400" />
                     </Col>
                   </Row>
                   <Row className="show-grid">
