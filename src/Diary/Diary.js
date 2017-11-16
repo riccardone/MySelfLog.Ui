@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import Fetch from 'react-fetch';
+//import Fetch from 'react-fetch';
+import BusModule from '../bus';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import '../App.css';
 const uuidv4 = require('uuid/v4');
 var moment = require('moment');
+var bus = BusModule();
 
 // deterministic
 // const uuidv5 = require('uuid/v5');
@@ -85,11 +87,11 @@ class Diary extends Component {
     //   return;
     // }
     //var profileId = localStorage.getItem('profileId');
-    var profileName = localStorage.getItem('profileName');
-    var profileNickname = localStorage.getItem('profileNickname');
-
-    var _this = this;
-    var boh = _this.state.foodType;
+    
+    var body = this.buildBody();
+    bus.publish("bodyLogBuilt", body);
+    
+    // TODO move the post into another module maybe in that module using a queue and publishing the waiting messages one by one
     fetch('http://localhost:2113/streams/diary-input', {
       method: 'POST',
       headers: {
@@ -97,31 +99,10 @@ class Diary extends Component {
         'Content-Type': 'application/vnd.eventstore.events+json'
       },
       body: JSON.stringify(
-        [
-          {
-            "eventId": uuidv4(),
-            "eventType": "SelfLogValueReceived",
-            "data": {
-              value: _this.state.value,
-              mmolvalue: _this.state.mmolvalue,
-              slowTerapy: _this.state.slowTerapy,
-              fastTerapy: _this.state.fastTerapy,
-              calories: _this.state.calories,
-              comment: this.cleanString(_this.state.comment),
-              profileName: profileName,
-              profileNickname: profileNickname
-            },
-            "metadata": {  
-              applies: moment.utc().toDate().toUTCString(),
-              reverses: null,
-              source: 'myselflog-ui',
-              $correlationId: this.getCorrelationId()              
-            }
-          }
-        ]
+        body
       )
     }).then((response) => {
-      toast.info("Logs sent correctly");
+      toast.info("Logs sent correctly");      
       this.myFormRef.reset();
     });
   }
@@ -131,6 +112,34 @@ class Diary extends Component {
   addLog(log) {
     return { type: 'LogValue', title: log.title };
   }  
+
+  buildBody(){
+    var _this = this;  
+    var profileName = localStorage.getItem('profileName');
+    var profileNickname = localStorage.getItem('profileNickname');
+    return [
+      {
+        "eventId": uuidv4(),
+        "eventType": "SelfLogValueReceived",
+        "data": {
+          value: _this.state.value,
+          mmolvalue: _this.state.mmolvalue,
+          slowTerapy: _this.state.slowTerapy,
+          fastTerapy: _this.state.fastTerapy,
+          calories: _this.state.calories,
+          comment: this.cleanString(_this.state.comment),
+          profileName: profileName,
+          profileNickname: profileNickname
+        },
+        "metadata": {  
+          applies: moment.utc().toDate().toUTCString(),
+          reverses: null,
+          source: 'myselflog-ui',
+          $correlationId: this.getCorrelationId()              
+        }
+      }
+    ];
+  }
 
   login() {
     this.props.auth.login();
