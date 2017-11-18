@@ -5,6 +5,7 @@ import { createStore } from 'redux';
 import App from './App';
 import Home from './Home/Home';
 import Diary from './Diary/Diary';
+import Repository from './Diary/Repository';
 import History from './History/History';
 import Callback from './Callback/Callback';
 import Auth from './Auth/Auth';

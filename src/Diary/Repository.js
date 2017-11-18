@@ -1,4 +1,9 @@
+import Bus from '../bus';
+const uuidv4 = require('uuid/v4');
+var moment = require('moment');
+var bus = Bus();
 
+bus.subscribe("LogFormFilled", saveLog);
 
 function saveLog(state) {
     return fetch('http://localhost:2113/streams/diary-input', {
@@ -10,6 +15,10 @@ function saveLog(state) {
         body: JSON.stringify(
             buildBody(state)
         )
+    }).then(response => {
+      bus.publish("LogSucceed", "Logs sent correctly");
+    }).catch(err => {
+      bus.publish("LogErroed", err);
     });
 }
 
@@ -26,7 +35,7 @@ function buildBody(state) {
           slowTerapy: state.slowTerapy,
           fastTerapy: state.fastTerapy,
           calories: state.calories,
-          comment: this.cleanString(state.comment),
+          comment: cleanString(state.comment),
           profileName: profileName,
           profileNickname: profileNickname
         },
@@ -34,8 +43,17 @@ function buildBody(state) {
           applies: moment.utc().toDate().toUTCString(),
           reverses: null,
           source: 'myselflog-ui',
-          $correlationId: this.getCorrelationId()              
+          $correlationId: getCorrelationId()              
         }
       }
     ];
+
+    function cleanString(str) {
+      // Remove uri's and illegal chars
+      return str.replace(/(?:https?|ftp):\/\/[\n\S]+/g, "").replace(/[|&;$%@"<>()+,]/g, "");
+    }
+
+    function getCorrelationId() {
+      return localStorage.getItem('profileId').replace("|", "_");
+    }
   }

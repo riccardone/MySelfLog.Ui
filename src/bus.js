@@ -1,6 +1,6 @@
 module.exports = Bus;
 
-function Bus () {
+function Bus() {
     return eventBus;
 }
 
@@ -16,22 +16,16 @@ var eventBus = {
     },
 
     publish: function (topic, data) {
-        // return if the topic doesn't exist, or there are no listeners
-        if (!this.topics[topic] || this.topics[topic].length < 1) return;
+        return new Promise((resolve, reject) => {
+            // return if the topic doesn't exist, or there are no listeners
+            if (!this.topics[topic] || this.topics[topic].length < 1)
+                reject("the topic '" + topic + "' doesn't exist or there are no listeners");
 
-        // send the event to all listeners
-        this.topics[topic].forEach(function (listener) {
-            listener(data || {});
-        });
-    },
-
-    send: function (topic, data) {
-        // return if the topic doesn't exist, or there are no listeners
-        if (!this.topics[topic] || this.topics[topic].length < 1) return;
-
-        // send the event to all listeners
-        this.topics[topic].forEach(function (listener) {
-            listener(data || {});
+            // send the event to all listeners
+            this.topics[topic].forEach(function (listener) {
+                listener(data || {});
+            });
+            resolve("done");
         });
     }
 };

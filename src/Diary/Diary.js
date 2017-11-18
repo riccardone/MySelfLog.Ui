@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
 import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 //import Fetch from 'react-fetch';
-import BusModule from '../bus';
+import Bus from '../bus';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import '../App.css';
-const uuidv4 = require('uuid/v4');
-var moment = require('moment');
-var bus = BusModule();
+//const uuidv4 = require('uuid/v4');
+//var moment = require('moment');
+var bus = Bus();
+
+bus.subscribe("LogErroed", function(err){
+  toast.error(err.message);
+});
+
+bus.subscribe("LogSucceed", function(msg){
+  toast.info(msg);
+});
 
 // deterministic
 // const uuidv5 = require('uuid/v5');
@@ -69,15 +77,6 @@ class Diary extends Component {
     return isValid;
   }
 
-  getCorrelationId() {
-    return localStorage.getItem('profileId').replace("|", "_");
-  }
-
-  cleanString(str) {
-    // Remove uri's and illegal chars
-    return str.replace(/(?:https?|ftp):\/\/[\n\S]+/g, "").replace(/[|&;$%@"<>()+,]/g, "");
-  }
-
   handleSubmit(event) {
     event.preventDefault();
     // var isValid = this.getValidationState();
@@ -90,11 +89,8 @@ class Diary extends Component {
 
     var _this = this;
     // TODO use react redux instead of your silly bus (it's already configured in routes...)
-    bus.publish("bodyLogBuilt", _this.state).then((response) => {
-      toast.info("Logs sent correctly");
+    bus.publish("LogFormFilled", _this.state).then((response) => {      
       this.myFormRef.reset();
-    }).catch(err => {
-      toast.error(err);
     });
   }
   // https://stackoverflow.com/a/40635229
@@ -129,7 +125,8 @@ class Diary extends Component {
           isAuthenticated() && (
             <form onSubmit={this.handleSubmit} ref={(el) => this.myFormRef = el}>
               <h2>Diary</h2>
-              <FormGroup controlId="formBasicText" validationState={this.getValidationState()}>
+              {/* <FormGroup controlId="formBasicText" validationState={this.getValidationState()}> */}
+              <FormGroup controlId="formBasicText">
                 <Grid>
                   <Row className="show-grid">
                     <Col xs={9} md={6} lg={6} style={divStyle}>
