@@ -1,26 +1,10 @@
 import React, { Component } from 'react';
 import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-//import Fetch from 'react-fetch';
 import Bus from '../bus';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import '../App.css';
-//const uuidv4 = require('uuid/v4');
-//var moment = require('moment');
 var bus = Bus();
-
-bus.subscribe("LogErroed", function(err){
-  toast.error(err.message);
-});
-
-bus.subscribe("LogSucceed", function(msg){
-  toast.info(msg);
-});
-
-// deterministic
-// const uuidv5 = require('uuid/v5');
-//const MY_NAMESPACE = '<UUID fbf4a1a1-b4a3-4dfe-a01f-ec52c34e16e5>';
-//uuidv5('Hello, World!', MY_NAMESPACE); // -> '90123e1c-7512-523e-bb28-76fab9f2f73d'
 
 class Diary extends Component {
   constructor(props) {
@@ -36,13 +20,24 @@ class Diary extends Component {
     this.getValidationState = this.getValidationState.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+
+    // preserve the initial state in a new object
+    this.baseState = this.state;
+    this.subscribeForEvents();
   }
 
-  componentDidMount() {
-    // fetch('/users')
-    //   .then(res => res.json())
-    //   .then(users => this.setState({ users }));
-  }
+  subscribeForEvents = () => {
+    var _this = this;
+
+    bus.subscribe("LogSucceed", function(msg){
+      toast.info(msg);
+      _this.setState(_this.baseState);
+    });
+
+    bus.subscribe("LogErroed", function(err){
+      toast.error(err);
+    });
+  }  
 
   handleInputChange(event) {
     const target = event.target;
@@ -79,23 +74,14 @@ class Diary extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    // var isValid = this.getValidationState();
-    // if (isValid !== true) {
-    //   console.error(isValid);
-    //   toast(isValid);
-    //   return;
-    // }
-    //var profileId = localStorage.getItem('profileId');
-
-    var _this = this;
-    // TODO use react redux instead of your silly bus (it's already configured in routes...)
-    bus.publish("LogFormFilled", _this.state).then((response) => {      
-      this.myFormRef.reset();
-    });
+    bus.publish("LogFormFilled", this.state);
   }
-  // https://stackoverflow.com/a/40635229
 
-  // redux action
+  resetForm = () => {
+    this.setState(this.baseState);
+  }
+
+  // redux action (TODO)
   addLog(log) {
     return { type: 'LogValue', title: log.title };
   }
@@ -104,15 +90,10 @@ class Diary extends Component {
     this.props.auth.login();
   }
 
-  // https://github.com/react-bootstrap/react-bootstrap/issues/77
-  // https://stackoverflow.com/questions/39047130/react-bootstrap-importing-modules
-
   render() {
     const { isAuthenticated } = this.props.auth;
     const divStyle = {
-      // borderColor: 'black',
-      // borderStyle: 'solid',
-      // borderWidth: '1px'
+      // borderColor: 'black'
     };
 
     return (
@@ -159,7 +140,7 @@ class Diary extends Component {
                       <Button bsStyle="primary" type="submit">Submit</Button>
                     </Col>
                     <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <Button bsStyle="warning">Reset</Button>
+                      <Button bsStyle="warning" onClick={this.resetForm}>Reset</Button>                      
                     </Col>
                   </Row>
                 </Grid>
@@ -181,13 +162,7 @@ class Diary extends Component {
               </h4>
           )
         }
-      </div>
-      // <div className="App">
-      //   <h1>Users</h1>
-      //   {this.state.users.map(user =>
-      //     <div key={user.id}>{user.username}</div>
-      //   )}
-      // </div>
+      </div>      
     );
   }
 }
