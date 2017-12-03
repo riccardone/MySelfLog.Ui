@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
-import { Grid } from 'react-bootstrap';
-import { Row } from 'react-bootstrap';
-import { Col } from 'react-bootstrap';
-import { FormGroup } from 'react-bootstrap';
-import { FormControl } from 'react-bootstrap';
-import { ControlLabel } from 'react-bootstrap';
+import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import Bus from '../bus';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 import '../App.css';
+var bus = Bus();
 
 class Diary extends Component {
   constructor(props) {
@@ -17,23 +15,34 @@ class Diary extends Component {
       slowTerapy: '',
       fastTerapy: '',
       calories: '',
-      foodType: ''
-    };    
+      comment: ''
+    };
     this.getValidationState = this.getValidationState.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+
+    // preserve the initial state in a new object
+    this.baseState = this.state;
+    this.subscribeForEvents();
   }
 
-  componentDidMount() {
-    // fetch('/users')
-    //   .then(res => res.json())
-    //   .then(users => this.setState({ users }));
-  }
+  subscribeForEvents = () => {
+    var _this = this;
+
+    bus.subscribe("LogSucceed", function(msg){
+      toast.info(msg);
+      _this.setState(_this.baseState);
+    });
+
+    bus.subscribe("LogErroed", function(err){
+      toast.error(err);
+    });
+  }  
 
   handleInputChange(event) {
     const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
 
     this.setState({
       [name]: value
@@ -41,26 +50,38 @@ class Diary extends Component {
   }
 
   getValidationState() {
-    // const length = this.state.value.length;
-    // if (length > 10) return 'success';
-    // else if (length > 5) return 'warning';
-    // else if (length > 0) return 'error';
+    var isValid = true;
+    const fastTerapy = this.state.value.length;
+
+    if (this.state.value > 0 && this.state.value < 20) return 'warning: value is very low';
+    else if (this.state.value < 10) return 'error: value is too low';
+    else if (this.state.value > 800) return 'error: value is too high';
+
+    if (this.state.value > 0 && this.state.mmolvalue < 2) return 'warning: mmolvalue is very low';
+    else if (this.state.mmolvalue < 1) return 'error: mmolvalue is too low';
+    else if (this.state.mmolvalue > 35) return 'error: mmolvalue is too high';
+
+    if (this.state.value > 0 && this.state.slowTerapy < 3) return 'warning: slow terapy is very low';
+    else if (this.state.slowTerapy < 2) return 'error: slow terapy is too low';
+    else if (this.state.slowTerapy > 150) return 'error: slow terapy is too high';
+
+    if (this.state.value > 0 && this.state.fastTerapy < 2) return 'warning: fast terapy is very low';
+    else if (this.state.fastTerapy < 1) return 'error: fast terapy is too low';
+    else if (this.state.fastTerapy > 60) return 'error: fast terapy is too high';
+
+    return isValid;
   }
 
   handleSubmit(event) {
     event.preventDefault();
-
-    var _this = this;
-    console.log(_this.state.value);
-    // if (this.refs.titleInput !== '') {     
-    //   var log = {
-    //     title: this.refs.titleInput.value
-    //   };
-    //   return this.props.dispatch(this.addLog(log));
-    // }
+    bus.publish("LogFormFilled", this.state);
   }
 
-  // redux action
+  resetForm = () => {
+    this.setState(this.baseState);
+  }
+
+  // redux action (TODO)
   addLog(log) {
     return { type: 'LogValue', title: log.title };
   }
@@ -69,24 +90,24 @@ class Diary extends Component {
     this.props.auth.login();
   }
 
-  // https://github.com/react-bootstrap/react-bootstrap/issues/77
-  // https://stackoverflow.com/questions/39047130/react-bootstrap-importing-modules
-
   render() {
     const { isAuthenticated } = this.props.auth;
     const divStyle = {
-      // borderColor: 'black',
-      // borderStyle: 'solid',
-      // borderWidth: '1px'
+      // borderColor: 'black'
     };
 
     return (
       <div className="container">
+        <ToastContainer
+          hideProgressBar={true}
+          newestOnTop={true}
+        />
         {
           isAuthenticated() && (
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={this.handleSubmit} ref={(el) => this.myFormRef = el}>
               <h2>Diary</h2>
-              <FormGroup controlId="formBasicText" validationState={this.getValidationState()}>
+              {/* <FormGroup controlId="formBasicText" validationState={this.getValidationState()}> */}
+              <FormGroup controlId="formBasicText">
                 <Grid>
                   <Row className="show-grid">
                     <Col xs={9} md={6} lg={6} style={divStyle}>
@@ -109,24 +130,17 @@ class Diary extends Component {
                       <ControlLabel>Calories</ControlLabel>
                       <FormControl type="number" name="calories" value={this.state.calories} onChange={this.handleInputChange} placeholder="calories" /></Col>
                     <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <ControlLabel>Food types</ControlLabel>
-                      <FormGroup controlId="formControlsSelect">
-                        <FormControl componentClass="select" name="foodType" value={this.state.foodType} onChange={this.handleInputChange} placeholder="select FoodType">
-                          <option value="select">select</option>
-                          <option value="other">Fruits</option>
-                          <option value="other">Snack</option>
-                          <option value="other">Lunch</option>
-                          <option value="other">Dinner</option>
-                        </FormControl>
-                      </FormGroup>
+                      <ControlLabel>Comment</ControlLabel>
+                      <FormControl name="comment" componentClass="textarea" value={this.state.comment} onChange={this.handleInputChange} placeholder="comment" maxLength="400" />
                     </Col>
                   </Row>
                   <Row className="show-grid">
+                    <br />
                     <Col xs={9} md={6} lg={6} style={divStyle}>
                       <Button bsStyle="primary" type="submit">Submit</Button>
                     </Col>
                     <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <Button bsStyle="warning">Reset</Button>
+                      <Button bsStyle="warning" onClick={this.resetForm}>Reset</Button>                      
                     </Col>
                   </Row>
                 </Grid>
@@ -148,13 +162,7 @@ class Diary extends Component {
               </h4>
           )
         }
-      </div>
-      // <div className="App">
-      //   <h1>Users</h1>
-      //   {this.state.users.map(user =>
-      //     <div key={user.id}>{user.username}</div>
-      //   )}
-      // </div>
+      </div>      
     );
   }
 }
