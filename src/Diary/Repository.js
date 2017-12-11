@@ -75,6 +75,7 @@ function buildBody(state) {
   }
 
   function getCorrelationId() {
+    // TODO use deterministic uuid passing this profileid
     return localStorage.getItem('profileId').replace("|", "_");
   }
 }

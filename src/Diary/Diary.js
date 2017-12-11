@@ -29,15 +29,15 @@ class Diary extends Component {
   subscribeForEvents = () => {
     var _this = this;
 
-    bus.subscribe("LogSucceed", function(msg){
+    bus.subscribe("LogSucceed", function (msg) {
       toast.info(msg);
       _this.setState(_this.baseState);
     });
 
-    bus.subscribe("LogErroed", function(err){
+    bus.subscribe("LogErroed", function (err) {
       toast.error(err);
     });
-  }  
+  }
 
   handleInputChange(event) {
     const target = event.target;
@@ -93,7 +93,7 @@ class Diary extends Component {
   render() {
     const { isAuthenticated } = this.props.auth;
     const divStyle = {
-      // borderColor: 'black'
+      margin:'5px'
     };
 
     return (
@@ -109,38 +109,34 @@ class Diary extends Component {
               {/* <FormGroup controlId="formBasicText" validationState={this.getValidationState()}> */}
               <FormGroup controlId="formBasicText">
                 <Grid>
-                  <Row className="show-grid">
-                    <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <ControlLabel>value</ControlLabel>
-                      <FormControl type="number" name="value" value={this.state.value} onChange={this.handleInputChange} placeholder="value" /></Col>
-                    <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <ControlLabel>mmol value</ControlLabel>
-                      <FormControl type="number" name="mmolvalue" value={this.state.mmolvalue} onChange={this.handleInputChange} placeholder="mmol value" /></Col>
-                  </Row>
-                  <Row className="show-grid">
-                    <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <ControlLabel>Slow terapy number</ControlLabel>
-                      <FormControl type="number" name="slowTerapy" value={this.state.slowTerapy} onChange={this.handleInputChange} placeholder="slow terapy number" /></Col>
-                    <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <ControlLabel>Fast terapy number</ControlLabel>
-                      <FormControl type="number" name="fastTerapy" value={this.state.fastTerapy} onChange={this.handleInputChange} placeholder="fast terapy number" /></Col>
-                  </Row>
-                  <Row className="show-grid">
-                    <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <ControlLabel>Calories</ControlLabel>
-                      <FormControl type="number" name="calories" value={this.state.calories} onChange={this.handleInputChange} placeholder="calories" /></Col>
-                    <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <ControlLabel>Comment</ControlLabel>
-                      <FormControl name="comment" componentClass="textarea" value={this.state.comment} onChange={this.handleInputChange} placeholder="comment" maxLength="400" />
+                  <Row>
+                    <Col xs={9} md={6} lg={6}>
+                      <FormControl style={divStyle} type="number" name="value" value={this.state.value} onChange={this.handleInputChange} placeholder="value" />
+                    </Col>
+                    <Col xs={9} md={6} lg={6}>
+                      <FormControl style={divStyle} type="number" name="mmolvalue" value={this.state.mmolvalue} onChange={this.handleInputChange} placeholder="mmol value" />
                     </Col>
                   </Row>
-                  <Row className="show-grid">
+                  <Row>
+                    <Col xs={9} md={6} lg={6}>
+                      <FormControl style={divStyle} type="number" name="slowTerapy" value={this.state.slowTerapy} onChange={this.handleInputChange} placeholder="slow terapy number" /></Col>
+                    <Col xs={9} md={6} lg={6}>
+                      <FormControl style={divStyle} type="number" name="fastTerapy" value={this.state.fastTerapy} onChange={this.handleInputChange} placeholder="fast terapy number" /></Col>
+                  </Row>
+                  <Row>
+                    <Col xs={9} md={6} lg={6}>
+                      <FormControl style={divStyle} type="number" name="calories" value={this.state.calories} onChange={this.handleInputChange} placeholder="calories" /></Col>
+                    <Col xs={10} md={6} lg={6}>
+                      <FormControl style={divStyle} name="comment" componentClass="textarea" value={this.state.comment} onChange={this.handleInputChange} placeholder="comment" maxLength="400" />
+                    </Col>
+                  </Row>
+                  <Row>
                     <br />
-                    <Col xs={9} md={6} lg={6} style={divStyle}>
+                    <Col xs={10} md={3} lg={3}>
                       <Button bsStyle="primary" type="submit">Submit</Button>
                     </Col>
-                    <Col xs={9} md={6} lg={6} style={divStyle}>
-                      <Button bsStyle="warning" onClick={this.resetForm}>Reset</Button>                      
+                    <Col xs={10} md={9} lg={9}>
+                      <Button bsStyle="warning" onClick={this.resetForm}>Reset</Button>
                     </Col>
                   </Row>
                 </Grid>
@@ -162,7 +158,7 @@ class Diary extends Component {
               </h4>
           )
         }
-      </div>      
+      </div>
     );
   }
 }
