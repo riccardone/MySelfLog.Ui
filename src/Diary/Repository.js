@@ -30,8 +30,8 @@ setInterval(function () {
 }, interval);
 
 function sendLog(body) {
-  // return fetch('http://178.62.84.102:2113/streams/diary-input', {
-    return fetch('http://localhost:2113/streams/diary-input', {
+  return fetch('http://infrastructure.myselflog.com:2113/streams/diary-input', {
+    // return fetch('http://localhost:2113/streams/diary-input', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
