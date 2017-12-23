@@ -1,6 +1,11 @@
 import Bus from '../bus';
+var cfg = require('../config');
+const uuidv5 = require('uuid/v5');
 const uuidv4 = require('uuid/v4');
 var moment = require('moment');
+
+// Save carefully this namespace as you'll need it in the future to get the same deterministic ids
+const my_namespace = 'f11c5317-06bb-47ad-b589-2b8e8332decd';
 var bus = Bus();
 var bufferedLogs = [];
 var interval = 3000;
@@ -29,9 +34,8 @@ setInterval(function () {
   }  
 }, interval);
 
-function sendLog(body) {
-  return fetch('http://infrastructure.myselflog.com:2113/streams/diary-input', {
-    // return fetch('http://localhost:2113/streams/diary-input', {
+function sendLog(body) {  
+    return fetch(cfg.eventstoreConnection + '/streams/' + cfg.publishTo, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -44,21 +48,19 @@ function sendLog(body) {
 }
 
 function buildBody(state) {
-  // var profileName = localStorage.getItem('profileName');
-  // var profileNickname = localStorage.getItem('profileNickname');
+  
+  var profileNickname = localStorage.getItem('profileNickname');
   return [
     {
       "eventId": uuidv4(),
-      "eventType": "SelfLogValueReceived",
+      "eventType": "MySelfLogValueReceived",
       "data": {
         value: state.value,
         mmolvalue: state.mmolvalue,
         slowTerapy: state.slowTerapy,
         fastTerapy: state.fastTerapy,
         calories: state.calories,
-        comment: cleanString(state.comment)
-        // profileName: profileName,
-        // profileNickname: profileNickname
+        comment: cleanString(state.comment)       
       },
       "metadata": {
         applies: moment.utc().toDate().toUTCString(),
@@ -74,8 +76,8 @@ function buildBody(state) {
     return str.replace(/(?:https?|ftp):\/\/[\n\S]+/g, "").replace(/[|&;$%@"<>()+,]/g, "");
   }
 
-  function getCorrelationId() {
-    // TODO use deterministic uuid passing this profileid
-    return localStorage.getItem('profileId').replace("|", "_");
+  function getCorrelationId() {    
+    var profileName = localStorage.getItem('profileName');
+    return uuidv5(profileName, my_namespace);
   }
 }
