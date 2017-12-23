@@ -12,5 +12,5 @@ before_install:
 - sudo apt-get update
 - sudo apt-get --yes --option Dpkg::Options::="--force-confnew" install docker-ce
 
-script:
-- ./run_test.sh
+#script:
+#- ./run_test.sh
