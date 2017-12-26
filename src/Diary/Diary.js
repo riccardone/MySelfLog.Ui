@@ -49,6 +49,12 @@ class Diary extends Component {
     });
   }
 
+  convertFromMmol() {    
+    this.setState({
+      ['value']: Math.round(this.state.mmolvalue*18.0182)
+    });
+  }
+
   getValidationState() {
     var isValid = true;
     const fastTerapy = this.state.value.length;
