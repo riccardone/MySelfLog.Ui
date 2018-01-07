@@ -11,18 +11,8 @@ class Diary extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // value: '',
-      // mmolvalue: '',
-      // slowTerapy: '',
-      // fastTerapy: '',
-      // calories: '',
-      // comment: '',
       securityLink: ''
     };
-
-    // this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleInputChange = this.handleInputChange.bind(this);
-
     // preserve the initial state in a new object
     this.baseState = this.state;
     this.subscribeForEvents();
@@ -34,13 +24,6 @@ class Diary extends Component {
 
   subscribeForEvents = () => {
     var _this = this;
-    // bus.subscribe("LogSucceed", function (msg) {
-    //   toast.info(msg);
-    //   _this.setState(_this.baseState);
-    // });
-    // bus.subscribe("LogErroed", function (err) {
-    //   toast.error(err);
-    // });
     bus.subscribe("SecurityLinkFound", (data) => {
       _this.setState({
         securityLink: data
@@ -50,25 +33,6 @@ class Diary extends Component {
       toast.error("Security Link not found")
     });
   }
-
-  // handleInputChange(event) {
-  //   const target = event.target;
-  //   const name = target.name;
-  //   const value = target.type === 'checkbox' ? target.checked : target.value;
-
-  //   this.setState({
-  //     [name]: value
-  //   });
-  // }
-  
-  // handleSubmit(event) {
-  //   event.preventDefault();
-  //   bus.publish("LogFormFilled", this.state);
-  // }
-
-  // resetForm = () => {
-  //   this.setState(this.baseState);
-  // }
 
   // redux action (TODO)
   addLog(log) {
