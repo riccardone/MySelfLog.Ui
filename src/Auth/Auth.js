@@ -31,13 +31,14 @@ export default class Auth {
           if (profile) {
             authResult.profile = profile;
             // Set the time that the access token will expire at
-            let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+            let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());            
             localStorage.setItem('access_token', authResult.accessToken);
             localStorage.setItem('id_token', authResult.idToken);
             localStorage.setItem('expires_at', expiresAt);
             localStorage.setItem('profileId', authResult.profile.sub);
             localStorage.setItem('profileName', authResult.profile.name);
             localStorage.setItem('profileNickname', authResult.profile.nickname);
+            localStorage.setItem('profilePicture', authResult.profile.picture);
             // navigate to the home route
             history.replace('/home');
           } else {
