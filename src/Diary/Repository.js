@@ -1,4 +1,5 @@
 import Bus from '../bus';
+import { toast } from 'react-toastify';
 var cfg = require('../config');
 var moment = require('moment');
 
@@ -47,16 +48,14 @@ function getSecuritylink(profile) {
   return fetch(cfg.apiLink + "/api/v1/diary/securitylink/" + profile, {
     method: 'GET'
   }).then((resp) => {
-      if (resp.status === 404) {
-        bus.publish("SecurityLinkNotFound");
-      }
+    if (resp.ok == false) {
+      bus.publish("SecurityLinkNotFound", resp.statusText);
+    } else {
       bus.publish("SecurityLinkFound", resp.text());
-    });
-    // .then(x => {
-    //   this.setState({
-    //     diaryId: x
-    //   });
-    // });
+    }
+  }).catch(err => {
+    //bus.publish("SecurityLinkNotFound", err);
+  });  
 }
 
 function saveLog(state) {

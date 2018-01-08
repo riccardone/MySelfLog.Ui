@@ -19,7 +19,7 @@ class Diary extends Component {
   }
 
   componentDidMount() {
-
+    bus.publish("GetSecurityLink", 'riccardo@dinuzzo.it')
   }
 
   subscribeForEvents = () => {
@@ -30,7 +30,7 @@ class Diary extends Component {
       });
     });
     bus.subscribe("SecurityLinkNotFound", (data) => {
-      toast.error("Security Link not found")
+      toast.error("Security Link not found " + data)
     });
   }
 
@@ -42,8 +42,6 @@ class Diary extends Component {
   login() {
     this.props.auth.login();
   }
-
-
 
   render() {
     const { isAuthenticated } = this.props.auth;

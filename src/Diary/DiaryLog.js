@@ -55,15 +55,7 @@ class DiaryLog extends React.Component {
         });
         bus.subscribe("LogErroed", function (err) {
             toast.error(err);
-        });
-        bus.subscribe("SecurityLinkFound", (data) => {
-            _this.setState({
-                securityLink: data
-            });
-        });
-        bus.subscribe("SecurityLinkNotFound", (data) => {
-            toast.error("Security Link not found")
-        });
+        });        
     }
 
     handleSubmit(event) {
