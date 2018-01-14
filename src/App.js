@@ -31,7 +31,7 @@ class App extends Component {
               onClick={this.goTo.bind(this, 'home')}
             >
               Home
-            </Button>
+            </Button>            
             {
               !isAuthenticated() && (
                   <Button

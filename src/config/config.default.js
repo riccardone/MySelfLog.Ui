@@ -4,8 +4,8 @@ config.env = 'dev';
 config.host = 'localhost';
 config.port = 3001;
 
-config.eventstoreConnection = 'http://localhost:2113';
-config.publishTo = "diary-input";
+config.apiLink = 'http://localhost:3001';
+config.path = '/api/v1/logs';
 config.callbackUrl = "http://localhost:3000/callback";
 
 // logging
