@@ -1,3 +1,4 @@
- React.js app for logging health data
+# MySelfLog.Ui
+React.js app for logging health data
 
-[Architecture](MySelfLog.pdf)
+[Architecture Overview](MySelfLog.pdf)
