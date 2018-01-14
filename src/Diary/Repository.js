@@ -9,21 +9,8 @@ var interval = 3000;
 
 bus.subscribe("LogFormFilled", saveLog);
 bus.subscribe("CreateDiary", createDiary);
-bus.subscribe("GetSecurityLink", getSecuritylink);
-
-// module.exports = Repository;
-
-// function Repository() { }
-
-// Repository.prototype.getDiaryId = function (profile) {
-//   return fetch(cfg.apiLink + cfg.path + "/" + profile, {
-//     method: 'GET',
-//     headers: {
-//       'Accept': 'application/json',
-//       'Content-Type': 'application/json'
-//     }
-//   });
-// }
+bus.subscribe("GetDiaryName", getDiaryName);
+bus.subscribe("SearchForDuplicates", searchForDuplicates);
 
 function createDiary(obj) {
   var messageBody = buildCreateDiaryBody(obj);
@@ -37,25 +24,48 @@ function createDiary(obj) {
       messageBody
     )
   }).then((response) => {
-    bus.publish("LogSucceed", "Log sent correctly");
+    bus.publish("DiaryCreated", "Diary '" + obj.diaryName + "' created");
   }).catch(err => {
     bufferedLogs.push(messageBody);
     bus.publish("LogErroed", err.message + " - Retrying to send this log in " + interval / 1000 + " seconds...");
   });
 }
 
-function getSecuritylink(profile) {
-  return fetch(cfg.apiLink + "/api/v1/diary/securitylink/" + profile, {
+function searchForDuplicates(diaryName) {
+  return fetch(cfg.apiLink + "/api/v1/diary/check/" + diaryName, {
     method: 'GET'
   }).then((resp) => {
-    if (resp.ok == false) {
-      bus.publish("SecurityLinkNotFound", resp.statusText);
+    if (resp.ok == false) {     
+      bus.publish("error", "network problem");
+    } else {      
+      return resp.text();      
+    }
+  }).then((a) => {
+    if (a == "available") {
+      bus.publish("DiaryNameIsAvailable", diaryName);
     } else {
-      bus.publish("SecurityLinkFound", resp.text());
+      bus.publish("DiaryNameIsNotAvailable", diaryName);
     }
   }).catch(err => {
     //bus.publish("SecurityLinkNotFound", err);
-  });  
+    console.log(err);
+  });
+}
+
+function getDiaryName() {
+  return fetch(cfg.apiLink + "/api/v1/diary/" + localStorage.getItem('profileName'), {
+    method: 'GET'
+  }).then((resp) => {
+    if (resp.ok == false) {
+      bus.publish("DiaryNotFound", resp.statusText);
+    } else {
+      return resp.json();      
+    }
+  }).then((d) => {
+    bus.publish("DiaryFound", d.DiaryName);
+  }).catch(err => {
+    bus.publish("error", err);    
+  });
 }
 
 function saveLog(state) {
@@ -95,7 +105,7 @@ function sendLog(body) {
 
 function buildCreateDiaryBody(obj) {
   return {
-    name: obj.value,
+    diaryName: obj.diaryName,
     profile: localStorage.getItem('profileName'),
     applies: moment.utc().toDate().toUTCString(),
     source: 'myselflog-ui'

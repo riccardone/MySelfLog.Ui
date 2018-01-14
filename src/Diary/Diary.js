@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import Bus from '../bus';
 import DiaryLog from './DiaryLog';
+import CreateDiary from './CreateDiary';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import '../App.css';
@@ -11,7 +12,7 @@ class Diary extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      securityLink: ''
+      diaryName: ''
     };
     // preserve the initial state in a new object
     this.baseState = this.state;
@@ -19,19 +20,28 @@ class Diary extends Component {
   }
 
   componentDidMount() {
-    bus.publish("GetSecurityLink", 'riccardo@dinuzzo.it')
+    if (this.props.auth) {
+      bus.publish("GetDiaryName");
+    }
   }
 
   subscribeForEvents = () => {
     var _this = this;
-    bus.subscribe("SecurityLinkFound", (data) => {
+    bus.subscribe("DiaryFound", (diaryName) => {
       _this.setState({
-        securityLink: data
+        diaryName: diaryName
       });
     });
-    bus.subscribe("SecurityLinkNotFound", (data) => {
-      toast.error("Security Link not found " + data)
+    bus.subscribe("DiaryNotFound", (data) => {
+      toast.error("Diary not found " + data)
     });
+    bus.subscribe("error", (err) => {
+      if (err && err.message) {
+        toast.error(err.message);
+      } else {
+        toast.error(err);
+      }
+    })
   }
 
   // redux action (TODO)
@@ -45,26 +55,35 @@ class Diary extends Component {
 
   render() {
     const { isAuthenticated } = this.props.auth;
-    const divStyleForSecurityLinkRow = {
+    const divStyleForLinkRow = {
       paddingTop: '40px'
     };
 
-    function SecurityLink(props) {
-      if (props.securityLink) {
-        return
-        <Grid>
-          <Row>
-            <Col xs={2} md={2} lg={2} style={divStyleForSecurityLinkRow}>
-              Your Diary Link
-          </Col>
-            <Col xs={10} md={10} lg={10} style={divStyleForSecurityLinkRow}>
-              <a>http://www.myselflog.com/diary/{props.securityLink}</a>
-            </Col>
-          </Row>
-        </Grid>
+    function ShowDiaryLog(props) {
+      if (props.diaryName) {
+        return <DiaryLog />
       } else {
-        return <p>Diary doesn't exist yet</p>;
+        return <p></p>;
       }
+    }
+
+    function ShowCreateDiary(props) {
+      if (props.diaryName) {
+        return <DiaryLink diaryName={props.diaryName} />
+      } else {
+        return <CreateDiary />
+      }
+    }
+
+    function DiaryLink(props) {
+      return <Grid>
+        <Row>
+          <Col xs={6} md={6} lg={6} style={divStyleForLinkRow}>            
+            <ControlLabel>Link</ControlLabel><br />
+            <a target="_blank" href={'http://www.myselflog.com/diary/' + props.diaryName}>http://www.myselflog.com/diary/{props.diaryName}</a>
+          </Col>
+        </Row>
+      </Grid>
     }
 
     return (
@@ -76,8 +95,8 @@ class Diary extends Component {
         {
           isAuthenticated() && (
             <div>
-              <DiaryLog />
-              <SecurityLink securityLink={this.state.securityLink} />
+              <ShowDiaryLog diaryName={this.state.diaryName} />
+              <ShowCreateDiary diaryName={this.state.diaryName} />
             </div>
           )
         }

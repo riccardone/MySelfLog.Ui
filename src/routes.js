@@ -5,7 +5,6 @@ import { createStore } from 'redux';
 import App from './App';
 import Home from './Home/Home';
 import Diary from './Diary/Diary';
-import Settings from './Settings/Settings';
 import Repository from './Diary/Repository';
 import History from './History/History';
 import Callback from './Callback/Callback';
@@ -30,8 +29,7 @@ export const makeMainRoutes = () => {
       <Router history={history} component={App}>
         <div>
           <Route path="/" render={(props) => <App auth={auth} {...props} />} />
-          <Route path="/home" render={(props) => <Diary auth={auth} {...props} />} />
-          <Route path="/settings" render={(props) => <Settings auth={auth} {...props} />} />
+          <Route path="/home" render={(props) => <Diary auth={auth} {...props} />} />          
           <Route path="/callback" render={(props) => {
             handleAuthentication(props);
             return <Callback {...props} />;

@@ -31,14 +31,7 @@ class App extends Component {
               onClick={this.goTo.bind(this, 'home')}
             >
               Home
-            </Button>
-            <Button
-              bsStyle="primary"
-              className="btn-margin"
-              onClick={this.goTo.bind(this, 'settings')}
-            >
-              Settings
-            </Button>
+            </Button>            
             {
               !isAuthenticated() && (
                   <Button
