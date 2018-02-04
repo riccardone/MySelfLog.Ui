@@ -23,7 +23,7 @@ class App extends Component {
         <Navbar fluid>
           <Navbar.Header>
             <Navbar.Brand>
-              <a href="#">MySelfLog</a>
+              MySelfLog
             </Navbar.Brand>
             <Button
               bsStyle="primary"

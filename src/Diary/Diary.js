@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { Grid, Row, Col, ControlLabel } from 'react-bootstrap';
 import Bus from '../bus';
 import DiaryLog from './DiaryLog';
 import CreateDiary from './CreateDiary';
@@ -33,7 +33,7 @@ class Diary extends Component {
       });
     });
     bus.subscribe("DiaryNotFound", (data) => {
-      toast.error("Diary not found " + data)
+      //toast.error("Diary not found " + data)
     });
     bus.subscribe("error", (err) => {
       if (err && err.message) {

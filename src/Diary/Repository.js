@@ -1,5 +1,7 @@
 import Bus from '../bus';
 import { toast } from 'react-toastify';
+
+require('dotenv').config();
 var cfg = require('../config');
 var moment = require('moment');
 
@@ -35,10 +37,10 @@ function searchForDuplicates(diaryName) {
   return fetch(cfg.apiLink + "/api/v1/diary/check/" + diaryName, {
     method: 'GET'
   }).then((resp) => {
-    if (resp.ok == false) {     
+    if (resp.ok == false) {
       bus.publish("error", "network problem");
-    } else {      
-      return resp.text();      
+    } else {
+      return resp.text();
     }
   }).then((a) => {
     if (a == "available") {
@@ -59,12 +61,14 @@ function getDiaryName() {
     if (resp.ok == false) {
       bus.publish("DiaryNotFound", resp.statusText);
     } else {
-      return resp.json();      
+      return resp.json();
     }
   }).then((d) => {
-    bus.publish("DiaryFound", d.DiaryName);
+    if (d) {
+      bus.publish("DiaryFound", d.DiaryName);
+    }
   }).catch(err => {
-    bus.publish("error", err);    
+    bus.publish("error", err);
   });
 }
 
