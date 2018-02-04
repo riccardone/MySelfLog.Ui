@@ -80,7 +80,7 @@ class Diary extends Component {
         <Row>
           <Col xs={6} md={6} lg={6} style={divStyleForLinkRow}>            
             <ControlLabel>Link</ControlLabel><br />
-            <a target="_blank" href={'http://www.myselflog.com/diary/' + props.diaryName}>http://www.myselflog.com/diary/{props.diaryName}</a>
+            <a target="_blank" href={'http://reports.myselflog.com/diary/' + props.diaryName + '/all/mgdl'}>Show '{props.diaryName}' diary</a>
           </Col>
         </Row>
       </Grid>
