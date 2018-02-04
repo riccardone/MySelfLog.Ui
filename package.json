@@ -26,5 +26,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://myselflog-api:5001"
+  "proxy": "http://api.myselflog.com:5001"
 }
