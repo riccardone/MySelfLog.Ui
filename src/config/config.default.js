@@ -1,12 +1,14 @@
 var config = module.exports = {};
 
 config.env = 'dev';
-config.host = 'localhost';
-config.port = 3001;
 
-config.apiLink = 'http://localhost:3001';
 config.path = '/api/v1/logs';
-config.callbackUrl = "http://localhost:3000/callback";
+
+// config.apiLink = 'http://myselflog-api:5001';
+// config.callbackUrl = "http://localhost:3000/callback";
+
+config.apiLink = 'http://api.myselflog.com:5001';
+config.callbackUrl = "http://preview.myselflog.com/callback";
 
 // logging
 config.logAppender = "debug";

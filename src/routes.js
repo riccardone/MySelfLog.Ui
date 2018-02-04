@@ -3,7 +3,6 @@ import { Route, Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import App from './App';
-import Home from './Home/Home';
 import Diary from './Diary/Diary';
 import Repository from './Diary/Repository';
 import History from './History/History';
@@ -20,7 +19,7 @@ const handleAuthentication = (nextState, replace) => {
 }
 
 let store = createStore(function(event){
-  console.log("ciao");
+  // TODO ?  
 });
 
 export const makeMainRoutes = () => {

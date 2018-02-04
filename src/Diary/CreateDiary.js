@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
 import Bus from '../bus';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import '../App.css';
 var bus = Bus();
@@ -27,7 +26,7 @@ class CreateDiary extends React.Component {
 
     onChange(event) {
         const re = /^[a-zA-Z0-9_.-]*$/;
-        if (event.target.value == '' || re.test(event.target.value)) {
+        if (event.target.value === '' || re.test(event.target.value)) {
             this.setState({ diaryName: event.target.value })
             if (!this.validate(event.target.value).diaryName) {
                 bus.publish("SearchForDuplicates", event.target.value);
