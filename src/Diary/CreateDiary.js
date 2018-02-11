@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import Bus from '../bus';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
 import '../App.css';
 var bus = Bus();
 
