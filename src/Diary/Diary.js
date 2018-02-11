@@ -4,7 +4,6 @@ import Bus from '../bus';
 import DiaryLog from './DiaryLog';
 import CreateDiary from './CreateDiary';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
 import '../App.css';
 var bus = Bus();
 

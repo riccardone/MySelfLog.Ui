@@ -1,34 +1,12 @@
 import React, { Component } from 'react';
 
 class Home extends Component {
-  login() {
-    this.props.auth.login();
-  }
   render() {
-    const { isAuthenticated } = this.props.auth;
     return (
       <div className="container">
-        {
-          isAuthenticated() && (
-              <h4>
-                You are logged in!
-              </h4>
-            )
-        }
-        {
-          !isAuthenticated() && (
-              <h4>
-                You are not logged in! Please{' '}
-                <a
-                    style={{ cursor: 'pointer' }}
-                    onClick={this.login.bind(this)}
-                >
-                  Log In
-                </a>
-                {' '}to continue.
-              </h4>
-            )
-        }
+        <h1>MySelf Log</h1>
+        <h4>Log your health</h4>
+        <p>Free service to keep track of your glucose values, terapies, calories and share with family or doctors</p>
       </div>
     );
   }
