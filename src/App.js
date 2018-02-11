@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Button } from 'react-bootstrap';
+import Home from './Home/Home';
 import './App.css';
 
 class App extends Component {
@@ -23,14 +24,14 @@ class App extends Component {
         <Navbar fluid>
           <Navbar.Header>
             <Navbar.Brand>
-              <a href="#">MySelfLog</a>
+              <a href="/home">MySelfLog</a>
             </Navbar.Brand>
             <Button
               bsStyle="primary"
               className="btn-margin"
-              onClick={this.goTo.bind(this, 'home')}
+              onClick={this.goTo.bind(this, 'diary')}
             >
-              Home
+              Diary
             </Button>
             {
               !isAuthenticated() && (
@@ -55,7 +56,7 @@ class App extends Component {
                 )
             }
           </Navbar.Header>
-        </Navbar>
+        </Navbar>    
       </div>
     );
   }
