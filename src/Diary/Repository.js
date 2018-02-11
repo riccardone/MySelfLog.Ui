@@ -2,7 +2,6 @@ import Bus from '../bus';
 import { toast } from 'react-toastify';
 
 require('dotenv').config();
-var cfg = require('../config');
 var moment = require('moment');
 
 var bus = Bus();
@@ -16,7 +15,7 @@ bus.subscribe("SearchForDuplicates", searchForDuplicates);
 
 function createDiary(obj) {
   var messageBody = buildCreateDiaryBody(obj);
-  return fetch(cfg.apiLink + "/api/v1/diary", {
+  return fetch("/api/v1/diary", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -34,16 +33,16 @@ function createDiary(obj) {
 }
 
 function searchForDuplicates(diaryName) {
-  return fetch(cfg.apiLink + "/api/v1/diary/check/" + diaryName, {
+  return fetch("/api/v1/diary/check/" + diaryName, {
     method: 'GET'
   }).then((resp) => {
-    if (resp.ok == false) {
+    if (resp.ok === false) {
       bus.publish("error", "network problem");
     } else {
       return resp.text();
     }
   }).then((a) => {
-    if (a == "available") {
+    if (a === "available") {
       bus.publish("DiaryNameIsAvailable", diaryName);
     } else {
       bus.publish("DiaryNameIsNotAvailable", diaryName);
@@ -55,10 +54,10 @@ function searchForDuplicates(diaryName) {
 }
 
 function getDiaryName() {
-  return fetch(cfg.apiLink + "/api/v1/diary/" + localStorage.getItem('profileName'), {
+  return fetch("/api/v1/diary/" + localStorage.getItem('profileName'), {
     method: 'GET'
   }).then((resp) => {
-    if (resp.ok == false) {
+    if (resp.ok === false) {
       bus.publish("DiaryNotFound", resp.statusText);
     } else {
       return resp.json();
@@ -95,7 +94,7 @@ setInterval(function () {
 }, interval);
 
 function sendLog(body) {
-  return fetch(cfg.apiLink + cfg.path, {
+  return fetch("/api/v1/logs", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
