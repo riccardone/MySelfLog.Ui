@@ -15,7 +15,7 @@ bus.subscribe("SearchForDuplicates", searchForDuplicates);
 
 function createDiary(obj) {
   var messageBody = buildCreateDiaryBody(obj);
-  return fetch("/api/v1/diary", {
+  return fetch(cfg.apiLink + "/api/v1/diary", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -33,7 +33,7 @@ function createDiary(obj) {
 }
 
 function searchForDuplicates(diaryName) {
-  return fetch("/api/v1/diary/check/" + diaryName, {
+  return fetch(cfg.apiLink + "/api/v1/diary/check/" + diaryName, {
     method: 'GET'
   }).then((resp) => {
     if (resp.ok === false) {
@@ -54,7 +54,7 @@ function searchForDuplicates(diaryName) {
 }
 
 function getDiaryName() {
-  return fetch("/api/v1/diary/" + localStorage.getItem('profileName'), {
+  return fetch(cfg.apiLink + "/api/v1/diary/" + localStorage.getItem('profileName'), {
     method: 'GET'
   }).then((resp) => {
     if (resp.ok === false) { 
@@ -94,7 +94,7 @@ setInterval(function () {
 }, interval);
 
 function sendLog(body) {
-  return fetch("/api/v1/logs", {
+  return fetch(cfg.apiLink + "/api/v1/logs", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
