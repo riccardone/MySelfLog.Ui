@@ -6,6 +6,7 @@
     "auth0-js": "^8.9.3",
     "axios": "^0.16.2",
     "bootstrap": "^3.3.7",
+    "dotenv": "^5.0.0",
     "eslint-config-defaults": "^9.0.0",
     "moment": "^2.19.1",
     "react": "^15.6.1",
@@ -26,5 +27,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://preview.myselflog.com:5001"
+  "proxy": "http://myselflog-api:5001"
 }

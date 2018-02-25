@@ -1,7 +1,5 @@
 import Bus from '../bus';
 import { toast } from 'react-toastify';
-require('dotenv').config();
-var cfg = require('../config');
 var moment = require('moment');
 
 var bus = Bus();
