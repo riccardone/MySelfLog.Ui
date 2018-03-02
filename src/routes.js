@@ -17,7 +17,7 @@ const handleAuthentication = (nextState, replace) => {
   if (/access_token|id_token|error/.test(nextState.location.hash)) {
     auth.handleAuthentication();
   }
-}
+};
 
 let store = createStore(function(event){
   console.log("ciao");
@@ -40,4 +40,4 @@ export const makeMainRoutes = () => {
       </Router>
     </Provider>
   );
-}
+};

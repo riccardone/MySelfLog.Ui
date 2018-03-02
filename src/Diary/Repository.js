@@ -5,6 +5,7 @@ var moment = require('moment');
 var bus = Bus();
 var bufferedLogs = [];
 var interval = 3000;
+var apiLink = "http://myselflog-api:5001";
 
 bus.subscribe("LogFormFilled", saveLog);
 bus.subscribe("CreateDiary", createDiary);
@@ -13,7 +14,7 @@ bus.subscribe("SearchForDuplicates", searchForDuplicates);
 
 function createDiary(obj) {
   var messageBody = buildCreateDiaryBody(obj);
-  return fetch("/api/v1/diary", {
+  return fetch(apiLink + "/api/v1/diary", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -31,7 +32,7 @@ function createDiary(obj) {
 }
 
 function searchForDuplicates(diaryName) {
-  return fetch("/api/v1/diary/check/" + diaryName, {
+  return fetch(apiLink + "/api/v1/diary/check/" + diaryName, {
     method: 'GET'
   }).then((resp) => {
     if (resp.ok === false) {
@@ -52,13 +53,13 @@ function searchForDuplicates(diaryName) {
 }
 
 function getDiaryName() {
-  return fetch("/api/v1/diary/" + localStorage.getItem('profileName'), {
+  return fetch(apiLink + "/api/v1/diary/" + localStorage.getItem('profileName'), {
     method: 'GET'
-  }).then((resp) => {
-    if (resp.ok === false) { 
-      bus.publish("DiaryNotFound", resp.statusText);
+  }).then(res => {
+    if (res.ok === false) { 
+      bus.publish("DiaryNotFound", res.statusText);
     } else {
-      return resp.json();
+      return res.json();
     }
   }).then((d) => {
     if (d) {
@@ -92,7 +93,7 @@ setInterval(function () {
 }, interval);
 
 function sendLog(body) {
-  return fetch("/api/v1/logs", {
+  return fetch(apiLink + "/api/v1/logs", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
