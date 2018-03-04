@@ -1,11 +1,11 @@
 import Bus from '../bus';
-import { toast } from 'react-toastify';
 var moment = require('moment');
 
 var bus = Bus();
 var bufferedLogs = [];
 var interval = 3000;
-var apiLink = "http://preview.myselflog.com:5001";
+var apiLink = "http://api.myselflog.com:5001";
+// var apiLink = "http://myselflog-api:5001";
 
 bus.subscribe("LogFormFilled", saveLog);
 bus.subscribe("CreateDiary", createDiary);
