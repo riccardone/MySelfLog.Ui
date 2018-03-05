@@ -16,7 +16,7 @@ class Home extends Component {
         <div className="container">
           <h1>MySelf Log</h1>
           <h4>Log your health</h4>
-          <p>Free service to keep track of your glucose values, terapies, calories and share with family or doctors</p>          
+          <p>Free service to keep track of your glucose values, terapies, calories and share with family or doctors. This can be used freely and anonymously by anyone with diabetes.</p>
         </div>
       </div>
     );
