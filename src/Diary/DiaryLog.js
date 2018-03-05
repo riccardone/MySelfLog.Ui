@@ -54,7 +54,7 @@ class DiaryLog extends React.Component {
         });
         bus.subscribe("LogErroed", function (err) {
             toast.error(err);
-        });        
+        });
     }
 
     handleSubmit(event) {
@@ -80,7 +80,7 @@ class DiaryLog extends React.Component {
     }
 
     getValidationState() {
-        var isValid = true;        
+        var isValid = true;
 
         if (this.state.value.length > 0) {
             if (this.state.value > 0 && this.state.value < 20) return 'warning: value is very low';
@@ -141,11 +141,12 @@ class DiaryLog extends React.Component {
                         </Col>
                     </Row>
                     <Row>
-                        <br />
                         <Col xs={10} md={3} lg={3}>
+                            <br />
                             <Button bsStyle="primary" type="submit">Submit</Button>
                         </Col>
                         <Col xs={10} md={9} lg={9}>
+                            <br />
                             <Button bsStyle="warning" onClick={this.resetForm}>Reset</Button>
                         </Col>
                     </Row>

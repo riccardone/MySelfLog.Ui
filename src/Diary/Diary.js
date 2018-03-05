@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import NavBarTop from '../navbar.top';
 import { Grid, Row, Col, ControlLabel } from 'react-bootstrap';
 import Bus from '../bus';
 import DiaryLog from './DiaryLog';
@@ -77,42 +78,45 @@ class Diary extends Component {
     function DiaryLink(props) {
       return <Grid>
         <Row>
-          <Col xs={6} md={6} lg={6} style={divStyleForLinkRow}>            
+          <Col xs={6} md={6} lg={6} style={divStyleForLinkRow}>
             <ControlLabel>Link</ControlLabel><br />
-            <a target="_blank" href={'http://preview.myselflog.com:5005/diary/' + props.diaryName + '/all/mgdl'}>Show '{props.diaryName}' diary</a>
+            <a target="_blank" href={'http://www.myselflog.com:5005/diary/' + props.diaryName + '/all/mgdl'}>Show '{props.diaryName}' diary</a>
           </Col>
         </Row>
-      </Grid> 
+      </Grid>
     }
 
     return (
-      <div className="container">
-        <ToastContainer
-          hideProgressBar={true}
-          newestOnTop={true}
-        />
-        {
-          isAuthenticated() && (
-            <div>
-              <ShowDiaryLog diaryName={this.state.diaryName} />
-              <ShowCreateDiary diaryName={this.state.diaryName} />
-            </div>
-          )
-        }
-        {
-          !isAuthenticated() && (
-            <h4>
-              You are not logged in! Please{' '}
-              <a
-                style={{ cursor: 'pointer' }}
-                onClick={this.login.bind(this)}
-              >
-                Log In
+      <div>
+        <NavBarTop auth={this.props.auth} {...this.props} />
+        <div className="container">
+          <ToastContainer
+            hideProgressBar={true}
+            newestOnTop={true}
+          />
+          {
+            isAuthenticated() && (
+              <div>
+                <ShowDiaryLog diaryName={this.state.diaryName} />
+                <ShowCreateDiary diaryName={this.state.diaryName} />
+              </div>
+            )
+          }
+          {
+            !isAuthenticated() && (
+              <h4>
+                You are not logged in! Please{' '}
+                <a
+                  style={{ cursor: 'pointer' }}
+                  onClick={this.login.bind(this)}
+                >
+                  Log In
                 </a>
-              {' '}to continue.
+                {' '}to continue.
               </h4>
-          )
-        }
+            )
+          }
+        </div>
       </div>
     );
   }

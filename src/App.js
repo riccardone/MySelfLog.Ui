@@ -1,65 +1,29 @@
-import React, { Component } from 'react';
-import { Navbar, Button } from 'react-bootstrap';
-import Home from './Home/Home';
-import './App.css';
+// import React, { Component } from 'react';
+// import { Navbar, Button } from 'react-bootstrap';
+// import './App.css';
 
-class App extends Component {
-  goTo(route) {
-    this.props.history.replace(`/${route}`)
-  }
+// class App extends Component {
+//   goTo(route) {
+//     this.props.history.replace(`/${route}`)
+//   }
+ 
+//   login() {
+//     this.props.auth.login();
+//   }
 
-  login() {
-    this.props.auth.login();
-  }
+//   logout() {
+//     this.props.auth.logout();
+//   }
 
-  logout() {
-    this.props.auth.logout();
-  }
+//   render() {
+//     const { isAuthenticated } = this.props.auth;
 
-  render() {
-    const { isAuthenticated } = this.props.auth;
+//     return (
+//       <div>
+        
+//       </div>
+//     );
+//   }
+// }
 
-    return (
-      <div>
-        <Navbar fluid>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <a href="/home">MySelfLog</a>
-            </Navbar.Brand>
-            <Button
-              bsStyle="primary"
-              className="btn-margin"
-              onClick={this.goTo.bind(this, 'diary')}
-            >
-              Diary
-            </Button>
-            {
-              !isAuthenticated() && (
-                  <Button
-                    bsStyle="primary"
-                    className="btn-margin"
-                    onClick={this.login.bind(this)}
-                  >
-                    Log In
-                  </Button>
-                )
-            }
-            {
-              isAuthenticated() && (
-                  <Button
-                    bsStyle="primary"
-                    className="btn-margin"
-                    onClick={this.logout.bind(this)}
-                  >
-                    Log Out
-                  </Button>
-                )
-            }
-          </Navbar.Header>
-        </Navbar>    
-      </div>
-    );
-  }
-}
-
-export default App;
+// export default App;

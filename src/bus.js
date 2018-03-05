@@ -1,9 +1,3 @@
-module.exports = Bus;
-
-function Bus() {
-    return eventBus;
-}
-
 var eventBus = {
     topics: {},
 
@@ -26,3 +20,9 @@ var eventBus = {
         });
     }
 };
+
+function Bus() {
+    return eventBus;
+}
+
+module.exports = Bus;
