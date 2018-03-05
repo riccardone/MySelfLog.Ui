@@ -19,7 +19,7 @@ const handleAuthentication = (nextState, replace) => {
   }
 };
 
-let store = createStore(function(event){
+let store = createStore(function (event) {
   console.log("ciao");
 });
 
@@ -27,14 +27,14 @@ export const makeMainRoutes = () => {
   return (
     <Provider store={store}>
       <Router history={history} component={App}>
-        <div>
-          <Route path="/" render={(props) => <App auth={auth} {...props} />} />
-          <Route path="/home" render={(props) => <Home auth={auth} {...props} />} />
+        <div>                    
+          <Route exact path="/" render={(props) => <Home auth={auth} {...props} />} />
+          <Route exact path="/home" render={(props) => <Home auth={auth} {...props} />} />
           <Route path="/diary" render={(props) => <Diary auth={auth} {...props} />} />
           <Route path="/callback" render={(props) => {
             handleAuthentication(props);
             return <Callback {...props} />;
-          }} />          
+          }} />
           <Route path="/history" render={(props) => <History auth={auth} {...props} />} />
         </div>
       </Router>
