@@ -26,7 +26,7 @@ class CreateDiary extends React.Component {
     onChange(event) {
         const re = /^[a-zA-Z0-9_.-]*$/;
         if (event.target.value === '' || re.test(event.target.value)) {
-            this.setState({ diaryName: event.target.value })
+            this.setState({ diaryName: event.target.value });
             if (!this.validate(event.target.value).diaryName) {
                 bus.publish("SearchForDuplicates", event.target.value);
             }
@@ -42,15 +42,15 @@ class CreateDiary extends React.Component {
     handleDiaryCreated(data) {
         toast.info(data);
         // TODO redirect to DiaryLog view
-        window.location = data.redirect
+        window.location = data.redirect;
     }
 
     handleDiaryNameIsAvailable(data) {        
-        this.setState({ isAvailable: false })
+        this.setState({ isAvailable: false });
     }
 
     handleDiaryNameIsNotAvailable(data) {
-        this.setState({ isAvailable: true })
+        this.setState({ isAvailable: true });
     }
 
     handleSubmit(event) {
@@ -71,7 +71,7 @@ class CreateDiary extends React.Component {
         var matchesForChars = diaryName.match(/[a-z]/gi) || [];
         var matchesForDigits = diaryName.match(/[0-9]/gi) || [];
         return {
-            diaryName: (matchesForChars.length + matchesForDigits.length) < 4,
+            diaryName: matchesForChars.length + matchesForDigits.length < 4,
             isAvailable: this.state.isAvailable
         };
     }    
@@ -93,22 +93,18 @@ class CreateDiary extends React.Component {
                             <ControlLabel>Define a unique name</ControlLabel>
                             <FormControl style={divStyle} type="text" name="name" placeholder="name" value={this.state.diaryName} onChange={this.onChange} />
                         </Col>
-                        <Col xs={8} md={8} lg={8}>
-
-                        </Col>
+                        <Col xs={8} md={8} lg={8} />
                     </Row>
                     <Row>
                         <br />
                         <Col xs={10} md={3} lg={3}>
                             <Button bsStyle="success" type="submit" disabled={isDisabled}>Submit</Button>
                         </Col>
-                        <Col xs={10} md={9} lg={9}>
-
-                        </Col>
+                        <Col xs={10} md={9} lg={9} />
                     </Row>
                 </Grid>
             </FormGroup>
-        </form>
+        </form>;
     }
 }
 
