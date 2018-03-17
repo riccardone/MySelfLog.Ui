@@ -116,38 +116,41 @@ class DiaryLog extends React.Component {
 
         // return (<input type="text" value={text} onChange={this.change} />);
         return <form onSubmit={this.handleSubmit} ref={(el) => this.myFormRef = el}>
-            <h2>Diary</h2>
+
             <FormGroup controlId="formBasicText">
                 <Grid>
                     <Row>
-                        <Col xs={9} md={6} lg={6}>
+                        <Col xs={9} md={9} lg={9}>
+                            <h2>Diary</h2>
+                        </Col>
+                        <Col xs={2} md={2} lg={2}>
+                            <br />
+                            <Button bsStyle="primary" type="submit">Submit</Button>
+                        </Col>
+                        <Col xs={1} md={1} lg={1}>
+                            <br />
+                            <Button bsStyle="warning" onClick={this.resetForm}>Reset</Button>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={6} md={6} lg={6}>
                             <FormControl style={divStyle} type="number" name="value" value={this.state.value} onChange={this.change} placeholder="value" />
                         </Col>
-                        <Col xs={9} md={6} lg={6}>
+                        <Col xs={6} md={6} lg={6}>
                             <FormControl style={divStyle} type="number" name="mmolvalue" value={this.state.mmolvalue} onChange={this.change} placeholder="mmol value" />
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={9} md={6} lg={6}>
+                        <Col xs={6} md={6} lg={6}>
                             <FormControl style={divStyle} type="number" name="slowTerapy" value={this.state.slowTerapy} onChange={this.change} placeholder="slow terapy number" /></Col>
-                        <Col xs={9} md={6} lg={6}>
+                        <Col xs={6} md={6} lg={6}>
                             <FormControl style={divStyle} type="number" name="fastTerapy" value={this.state.fastTerapy} onChange={this.change} placeholder="fast terapy number" /></Col>
                     </Row>
                     <Row>
-                        <Col xs={9} md={6} lg={6}>
+                        <Col xs={4} md={4} lg={4}>
                             <FormControl style={divStyle} type="number" name="calories" value={this.state.calories} onChange={this.change} placeholder="calories" /></Col>
-                        <Col xs={10} md={6} lg={6}>
+                        <Col xs={8} md={8} lg={8}>
                             <FormControl style={divStyle} name="comment" componentClass="textarea" value={this.state.comment} onChange={this.change} placeholder="comment" maxLength="400" />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={10} md={3} lg={3}>
-                            <br />
-                            <Button bsStyle="primary" type="submit">Submit</Button>
-                        </Col>
-                        <Col xs={10} md={9} lg={9}>
-                            <br />
-                            <Button bsStyle="warning" onClick={this.resetForm}>Reset</Button>
                         </Col>
                     </Row>
                 </Grid>

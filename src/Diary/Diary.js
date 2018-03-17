@@ -3,6 +3,7 @@ import NavBarTop from '../navbar.top';
 import { Grid, Row, Col, ControlLabel } from 'react-bootstrap';
 import Bus from '../bus';
 import DiaryLog from './DiaryLog';
+import DiaryReport from './DiaryReport';
 import CreateDiary from './CreateDiary';
 import { ToastContainer, toast } from 'react-toastify';
 import '../App.css';
@@ -54,10 +55,7 @@ class Diary extends Component {
   }
 
   render() {
-    const { isAuthenticated } = this.props.auth;
-    const divStyleForLinkRow = {
-      paddingTop: '40px'
-    };
+    const { isAuthenticated } = this.props.auth;    
 
     function ShowDiaryLog(props) {
       if (props.diaryName) {
@@ -65,25 +63,14 @@ class Diary extends Component {
       } else {
         return <p></p>;
       }
-    }
+    }    
 
     function ShowCreateDiary(props) {
-      if (props.diaryName) {
-        return <DiaryLink diaryName={props.diaryName} />
+      if (props.diaryName) {        
+        return <DiaryReport diaryName={props.diaryName} /> 
       } else {
         return <CreateDiary />
       }
-    }
-
-    function DiaryLink(props) {
-      return <Grid>
-        <Row>
-          <Col xs={6} md={6} lg={6} style={divStyleForLinkRow}>
-            <ControlLabel>Link</ControlLabel><br />
-            <a target="_blank" href={'http://www.myselflog.com:5005/diary/' + props.diaryName + '/all/mgdl'}>Show '{props.diaryName}' diary</a>
-          </Col>
-        </Row>
-      </Grid>
     }
 
     return (
@@ -98,7 +85,8 @@ class Diary extends Component {
             isAuthenticated() && (
               <div>
                 <ShowDiaryLog diaryName={this.state.diaryName} />
-                <ShowCreateDiary diaryName={this.state.diaryName} />
+                <ShowCreateDiary diaryName={this.state.diaryName} />                
+                <br />
               </div>
             )
           }
