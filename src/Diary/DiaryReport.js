@@ -11,16 +11,13 @@ class DiaryReport extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            diaryName: '',
             isAvailable: false,
             iframeKey: 0,
-            iframeHeigh: 600,
+            iframeHeigh: 800,
             switched: true,
             intervalId: this.setAutoRefresh()
         };
         this.onChange = this.onChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleDiaryCreated = this.handleDiaryCreated.bind(this);
         // preserve the initial state in a new object
         this.baseState = this.state;
         this.subscribeForEvents();
@@ -53,47 +50,20 @@ class DiaryReport extends React.Component {
         bus.subscribe("DiaryCreated", this.handleDiaryCreated);
     }
 
-    handleDiaryCreated(data) {
-
-    }
-
-    handleSubmit(event) {
-        event.preventDefault();
-        var errors = this.validate(this.state.diaryName);
-        if (!Object.keys(errors).some(x => errors[x])) {
-            // TODO ?
-        } else {
-            toast.error("...not valid");
-        }
-    }
-
     render() {
+        const diaryLink = 'http://www.myselflog.com:5005/diary/' + this.props.diaryName + '/all/mgdl';
+
         const divStyle = {
-            margin: '5px'
+            margin: '0px',
+            border: '0px'            
         };
-
-        const divStyleForLinkRow = {
-            paddingTop: '40px'
-        };
-
-        // function DiaryLink(props) {
-        //     return <Grid>
-        //         <Row>
-        //             <Col xs={6} md={6} lg={6} style={divStyleForLinkRow}>
-        //                 <ControlLabel>Link</ControlLabel><br />
-        //                 <a target="_blank" href={'http://www.myselflog.com:5005/diary/' + this.state.diaryName + '/all/mgdl'}>Show '{this.state.diaryName}' diary</a>
-        //             </Col>
-        //         </Row>
-        //     </Grid>
-        // }
 
         return <div>
             <Grid>
                 <Row>
                     <Col xs={11} md={11} lg={11}>
-                        {/* <DiaryLink diaryName={this.props.diaryName} /> */}
                         <ControlLabel>Link</ControlLabel><br />
-                        <a target="_blank" href={'http://www.myselflog.com:5005/diary/' + this.props.diaryName + '/all/mgdl'}>Show '{this.props.diaryName}' diary</a>
+                        <a target="_blank" href={diaryLink}>{diaryLink}</a>
                     </Col>
                     <Col xs={1} md={1} lg={1}>
                         <div>
@@ -106,7 +76,7 @@ class DiaryReport extends React.Component {
                 </Row>
                 <Row>
                     <Col xs={12} md={12} lg={12}>
-                        <iframe key={this.state.iframeKey} src="http://www.myselflog.com:5005/diary/' + this.props.diaryName + '/values/mgdl" ref={(f) => this.ifr = f} height={this.state.iframeHeigh} width="100%"></iframe>
+                        <iframe style={divStyle} key={this.state.iframeKey} src={diaryLink} height={this.state.iframeHeigh} width="100%"></iframe>
                     </Col>
                 </Row>
             </Grid>
