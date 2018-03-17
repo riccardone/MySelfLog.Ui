@@ -106,7 +106,7 @@ class DiaryReport extends React.Component {
                 </Row>
                 <Row>
                     <Col xs={12} md={12} lg={12}>
-                        <iframe key={this.state.iframeKey} src="http://localhost:5005/diary/riccardo/values/mgdl" ref={(f) => this.ifr = f} height={this.state.iframeHeigh} width="100%"></iframe>
+                        <iframe key={this.state.iframeKey} src="http://www.myselflog.com:5005/diary/' + this.props.diaryName + '/values/mgdl" ref={(f) => this.ifr = f} height={this.state.iframeHeigh} width="100%"></iframe>
                     </Col>
                 </Row>
             </Grid>
