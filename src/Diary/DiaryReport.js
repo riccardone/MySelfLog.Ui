@@ -51,23 +51,30 @@ class DiaryReport extends React.Component {
     }
 
     render() {
-        const diaryLink = 'http://www.myselflog.com:5005/diary/' + this.props.diaryName + '/all/mgdl';
+        function getLink(diaryName) { 
+            if(process.env.NODE_ENV === 'production'){
+                return 'http://www.myselflog.com:5005/diary/' + diaryName + '/all/mgdl';
+            }
+            return 'http://localhost:5005/diary/' + diaryName + '/all/mgdl';
+        }
+
+        var diaryLink = getLink(this.props.diaryName);        
 
         const divStyle = {
             margin: '0px',
-            border: '0px'            
+            border: '0px'
         };
 
         return <div>
             <Grid>
                 <Row>
-                    <Col xs={11} md={11} lg={11}>
+                    <Col xs={9} md={11} lg={11}>
                         <ControlLabel>Link</ControlLabel><br />
                         <a target="_blank" href={diaryLink}>{diaryLink}</a>
                     </Col>
-                    <Col xs={1} md={1} lg={1}>
+                    <Col xs={3} md={1} lg={1}>
                         <div>
-                            <span> Autorefresh</span>
+                            <span>Autorefresh</span>
                         </div>
                         <div>
                             <Switch onClick={this.toggleSwitch} on={this.state.switched} />
