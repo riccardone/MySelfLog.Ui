@@ -51,7 +51,8 @@ class DiaryReport extends React.Component {
     }
 
     render() {
-        const diaryLink = 'http://www.myselflog.com:5005/diary/' + this.props.diaryName + '/all/mgdl';
+        //const diaryLink = 'http://www.myselflog.com:5005/diary/' + this.props.diaryName + '/all/mgdl';
+        const diaryLink = 'http://localhost:5005/diary/' + this.props.diaryName + '/all/mgdl';
 
         const divStyle = {
             margin: '0px',
@@ -61,13 +62,13 @@ class DiaryReport extends React.Component {
         return <div>
             <Grid>
                 <Row>
-                    <Col xs={11} md={11} lg={11}>
+                    <Col xs={9} md={11} lg={11}>
                         <ControlLabel>Link</ControlLabel><br />
                         <a target="_blank" href={diaryLink}>{diaryLink}</a>
                     </Col>
-                    <Col xs={1} md={1} lg={1}>
+                    <Col xs={3} md={1} lg={1}>
                         <div>
-                            <span> Autorefresh</span>
+                            <span>Autorefresh</span>
                         </div>
                         <div>
                             <Switch onClick={this.toggleSwitch} on={this.state.switched} />
