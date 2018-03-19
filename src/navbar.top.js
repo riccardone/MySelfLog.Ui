@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Button } from 'react-bootstrap';
-import './App.css';
+import './navbar.top.css';
 
 class NavBarTop extends Component {
   goTo(route) {

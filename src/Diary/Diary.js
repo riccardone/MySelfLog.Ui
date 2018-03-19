@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import NavBarTop from '../navbar.top';
+import Footer from '../footer';
 import { Grid, Row, Col, ControlLabel } from 'react-bootstrap';
 import Bus from '../bus';
 import DiaryLog from './DiaryLog';
@@ -105,6 +106,7 @@ class Diary extends Component {
             )
           }
         </div>
+        <Footer />
       </div>
     );
   }
