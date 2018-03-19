@@ -4,6 +4,7 @@
 
 .classWithPad { margin:10px; padding:10px; }
 
-.navbar-brand a:link, a:visited {
-  color: white;
+.navbar-default {
+  background-color: #EEE;
+  border-bottom-color: #CCC;
 }

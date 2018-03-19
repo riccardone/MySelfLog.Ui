@@ -1,0 +1,7 @@
+.border-left {
+    border-left-color: #FF9900;
+    border-left-width: 3px;
+    border-left-style: solid;
+    padding: 10px;
+    padding-left: 25px;
+  }

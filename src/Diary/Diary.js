@@ -7,7 +7,6 @@ import DiaryLog from './DiaryLog';
 import DiaryReport from './DiaryReport';
 import CreateDiary from './CreateDiary';
 import { ToastContainer, toast } from 'react-toastify';
-import '../App.css';
 var bus = Bus();
 
 class Diary extends Component {

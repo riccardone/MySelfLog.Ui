@@ -1,10 +1,10 @@
 .footer {
     color: white;
     background-color: #004A7F;    
-    padding: 10px;    
+    padding: 5px;    
     text-align: center;
 }
 
-a:link, a:visited {
+.navbar-fixed-bottom .footer a:link, a:visited {
     color: white;
 }

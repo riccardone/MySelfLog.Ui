@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, Grid, Row, Col, FormGroup, FormControl } from 'react-bootstrap';
 import Bus from '../bus';
 import { toast } from 'react-toastify';
-import '../App.css';
 var bus = Bus();
 
 class DiaryLog extends React.Component {

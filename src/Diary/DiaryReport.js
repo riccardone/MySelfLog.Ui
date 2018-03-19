@@ -3,7 +3,6 @@ import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 're
 import Switch from 'react-toggle-switch';
 import Bus from '../bus';
 import { toast } from 'react-toastify';
-import '../App.css';
 import 'react-toggle-switch/dist/css/switch.min.css';
 var bus = Bus();
 
