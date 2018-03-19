@@ -51,12 +51,18 @@ class DiaryReport extends React.Component {
     }
 
     render() {
-        //const diaryLink = 'http://www.myselflog.com:5005/diary/' + this.props.diaryName + '/all/mgdl';
-        const diaryLink = 'http://localhost:5005/diary/' + this.props.diaryName + '/all/mgdl';
+        function getLink(diaryName) { 
+            if(process.env.NODE_ENV === 'production'){
+                return 'http://www.myselflog.com:5005/diary/' + diaryName + '/all/mgdl';
+            }
+            return 'http://localhost:5005/diary/' + diaryName + '/all/mgdl';
+        }
+
+        var diaryLink = getLink(this.props.diaryName);        
 
         const divStyle = {
             margin: '0px',
-            border: '0px'            
+            border: '0px'
         };
 
         return <div>
