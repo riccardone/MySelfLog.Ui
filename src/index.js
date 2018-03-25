@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.css';
-import './app.css';
+import './index.css';
 import { makeMainRoutes } from './routes';
 
 const routes = makeMainRoutes();
