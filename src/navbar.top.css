@@ -5,6 +5,11 @@
 .classWithPad { margin:10px; padding:10px; }
 
 .navbar-default {
-  background-color: #EEE;
+  background-color: #004A7F;
+  /* background-color: #EEE; */
   border-bottom-color: #CCC;
+}
+
+.navbar-header a:link, .navbar-header a:visited, .navbar-header a:hover {
+  color: white;
 }
