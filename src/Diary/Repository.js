@@ -23,7 +23,7 @@ function createDiary(obj) {
       messageBody
     )
   }).then((response) => {
-    bus.publish("DiaryCreated", "Diary '" + obj.diaryName + "' created");
+    bus.publish("DiaryCreated", { message: "Diary '" + obj.diaryName + "' created", diaryName: obj.diaryName });
   }).catch(err => {
     bufferedLogs.push(messageBody);
     bus.publish("LogErroed", err.message + " - Retrying to send this log in " + interval / 1000 + " seconds...");

@@ -39,9 +39,8 @@ class CreateDiary extends React.Component {
     }
 
     handleDiaryCreated(data) {
-        toast.info(data);
-        // TODO redirect to DiaryLog view
-        window.location = data.redirect;
+        toast.info(data.message);        
+        window.location = "/diary/" + data.diaryName;
     }
 
     handleDiaryNameIsAvailable(data) {        

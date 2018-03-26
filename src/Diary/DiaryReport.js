@@ -50,14 +50,14 @@ class DiaryReport extends React.Component {
     }
 
     render() {
-        function getLink(diaryName) { 
-            if(process.env.NODE_ENV === 'production'){
+        function getLink(diaryName) {
+            if (process.env.NODE_ENV === 'production') {
                 return 'http://www.myselflog.com:5005/diary/' + diaryName + '/all/mgdl';
             }
             return 'http://localhost:5005/diary/' + diaryName + '/all/mgdl';
         }
 
-        var diaryLink = getLink(this.props.diaryName);        
+        var diaryLink = getLink(this.props.diaryName);
 
         const divStyle = {
             margin: '0px',
