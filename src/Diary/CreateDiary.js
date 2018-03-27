@@ -9,7 +9,8 @@ class CreateDiary extends React.Component {
         super(props);
         this.state = {
             diaryName: '',
-            isAvailable: false
+            isAvailable: false,
+            fetchInProgress: false
         };
         //this.getValidationState = this.getValidationState.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -55,8 +56,10 @@ class CreateDiary extends React.Component {
         event.preventDefault();
         var errors = this.validate(this.state.diaryName); //this.getValidationState();
         if (!Object.keys(errors).some(x => errors[x])) {
+            this.setState({fetchInProgress: true});
             bus.publish("CreateDiary", this.state);
         } else {
+            this.setState({fetchInProgress: false});
             toast.error("The inserted name is not valid");
         }
     }
@@ -80,7 +83,7 @@ class CreateDiary extends React.Component {
         };
 
         const errors = this.validate(this.state.diaryName);        
-        const isDisabled = Object.keys(errors).some(x => errors[x]);
+        const isDisabled = Object.keys(errors).some(x => errors[x]) || this.state.fetchInProgress;
 
         return <form onSubmit={this.handleSubmit}>
             <h2>Create your Diary</h2>
