@@ -3,7 +3,6 @@ import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 're
 import Switch from 'react-toggle-switch';
 import Bus from '../bus';
 import { toast } from 'react-toastify';
-import '../App.css';
 import 'react-toggle-switch/dist/css/switch.min.css';
 var bus = Bus();
 
@@ -51,14 +50,14 @@ class DiaryReport extends React.Component {
     }
 
     render() {
-        function getLink(diaryName) { 
-            if(process.env.NODE_ENV === 'production'){
+        function getLink(diaryName) {
+            if (process.env.NODE_ENV === 'production') {
                 return 'http://www.myselflog.com:5005/diary/' + diaryName + '/all/mgdl';
             }
             return 'http://localhost:5005/diary/' + diaryName + '/all/mgdl';
         }
 
-        var diaryLink = getLink(this.props.diaryName);        
+        var diaryLink = getLink(this.props.diaryName);
 
         const divStyle = {
             margin: '0px',

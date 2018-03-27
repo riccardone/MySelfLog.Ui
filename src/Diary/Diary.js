@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import NavBarTop from '../navbar.top';
+import Footer from '../footer';
 import { Grid, Row, Col, ControlLabel } from 'react-bootstrap';
 import Bus from '../bus';
 import DiaryLog from './DiaryLog';
 import DiaryReport from './DiaryReport';
 import CreateDiary from './CreateDiary';
 import { ToastContainer, toast } from 'react-toastify';
-import '../App.css';
 var bus = Bus();
 
 class Diary extends Component {
@@ -105,6 +105,7 @@ class Diary extends Component {
             )
           }
         </div>
+        <Footer />
       </div>
     );
   }

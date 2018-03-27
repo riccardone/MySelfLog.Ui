@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import App from './App';
 import Home from './Home/Home';
 import Diary from './Diary/Diary';
 import Repository from './Diary/Repository';
@@ -26,7 +25,7 @@ let store = createStore(function (event) {
 export const makeMainRoutes = () => {
   return (
     <Provider store={store}>
-      <Router history={history} component={App}>
+      <Router history={history} component={Home}>
         <div>                    
           <Route exact path="/" render={(props) => <Home auth={auth} {...props} />} />
           <Route exact path="/home" render={(props) => <Home auth={auth} {...props} />} />

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-// import { Grid, Row, Col, ControlLabel } from 'react-bootstrap';
 import NavBarTop from '../navbar.top';
+import Footer from '../footer';
+import './home.css';
 
 class Home extends Component {
   constructor(props) {
-    super(props);    
+    super(props);
     // preserve the initial state in a new object
-    this.baseState = this.state;    
+    this.baseState = this.state;
   }
 
   render() {
@@ -14,11 +15,12 @@ class Home extends Component {
       <div>
         <NavBarTop auth={this.props.auth} {...this.props} />
         <div className="container">
-          <h1>MySelf Log</h1>
-          <h4>Log your health</h4>
-          <p>Free service to keep track of your glucose values, terapies, calories and share with family or doctors. This can be used freely and anonymously by anyone with diabetes.</p>
-          <p>Easy, fast, minimal</p>
+          <h1 className="page-title">MySelfLog</h1>
+          <div className="border-left">
+            <h3 className="page-subtitle">Open source Application to track your glucose values, terapies, calories and share them with family or doctors.<br /> This App can be used freely by anyone with diabetes.</h3>            
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
