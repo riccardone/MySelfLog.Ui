@@ -109,7 +109,7 @@ class MyDiary extends React.Component {
                         </Col>
                         <Col xs={6} md={6} lg={6}>
                             <div style={divStyle2}>
-                                {/* <span>ciao</span> */}
+                                
                             </div>
                         </Col>
                         <Col xs={2} md={2} lg={2}>
