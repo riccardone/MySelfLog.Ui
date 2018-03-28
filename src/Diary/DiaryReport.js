@@ -1,9 +1,11 @@
 import React from 'react';
-import { Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { InputGroup, Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Switch from 'react-toggle-switch';
 import Bus from '../bus';
 import { toast } from 'react-toastify';
 import 'react-toggle-switch/dist/css/switch.min.css';
+import moment from 'moment';
 var bus = Bus();
 
 class DiaryReport extends React.Component {
@@ -14,7 +16,11 @@ class DiaryReport extends React.Component {
             iframeKey: 0,
             iframeHeigh: 800,
             switched: true,
-            intervalId: this.setAutoRefresh()
+            intervalId: this.setAutoRefresh(),
+            from: moment().startOf('day'),
+            to: moment().endOf('day'),
+            diaryFormat: 'mgdl',
+            diaryType: 'all'
         };
         this.onChange = this.onChange.bind(this);
         // preserve the initial state in a new object
@@ -67,11 +73,27 @@ class DiaryReport extends React.Component {
         return <div>
             <Grid>
                 <Row>
-                    <Col xs={9} md={11} lg={11}>
-                        <ControlLabel>Link</ControlLabel><br />
-                        <a target="_blank" href={diaryLink}>{diaryLink}</a>
+                    <Col xs={4} md={4} lg={4}>
+                        <ControlLabel>Diary Link</ControlLabel><br />
+                        <FormGroup>
+                            <InputGroup>
+                                <FormControl type="text" name="diaryLink" onChange={({ target: { diaryLink } }) => this.setState({ diaryLink: diaryLink, copied: false })} value={diaryLink} />
+                                <InputGroup.Button>
+                                    <CopyToClipboard text={diaryLink} onCopy={() => this.setState({ copied: true })}><Button>copy</Button></CopyToClipboard>
+                                </InputGroup.Button>
+                            </InputGroup>
+                        </FormGroup>
                     </Col>
-                    <Col xs={3} md={1} lg={1}>
+                    <Col xs={6} md={6} lg={6}>
+                        <Grid>
+                            <Row>
+                            {/* <Col xs={2} md={2} lg={2}>prev</Col>
+                            <Col xs={2} md={2} lg={2}>date</Col>
+                            <Col xs={2} md={2} lg={2}>next</Col> */}
+                            </Row>
+                        </Grid>
+                    </Col>
+                    <Col xs={2} md={2} lg={2}>
                         <div>
                             <span>Autorefresh</span>
                         </div>
