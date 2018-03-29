@@ -1,6 +1,6 @@
 import React from 'react';
-import { Glyphicon, InputGroup, Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Glyphicon, Button, Grid, Row, Col } from 'react-bootstrap';
+import Footer from '../footer';
 import NavBarTopNoAuth from '../navbar.noauth.top';
 import Switch from 'react-toggle-switch';
 import 'react-toggle-switch/dist/css/switch.min.css';
@@ -12,7 +12,7 @@ class MyDiary extends React.Component {
         this.state = {
             isAvailable: false,
             iframeKey: 0,
-            iframeHeigh: 800,
+            iframeHeigh: 700,
             switched: true,
             intervalId: this.setAutoRefresh(),
             from: moment().startOf('day').format('YYYY-MM-DD HH:mm:ss'),
@@ -86,6 +86,7 @@ class MyDiary extends React.Component {
         const divStyle2 = {
             //border: '1px solid black',
             margin: '0px',
+            padding: '0px',
             textAlign: 'center'
         };
 
@@ -100,18 +101,14 @@ class MyDiary extends React.Component {
                             </div>
                         </Col>
                         <Col xs={2} md={2} lg={2}>
-                            <div style={divStyle2}>{this.getSelectedDate()}</div>
+                            <div style={divStyle2}><h4 id='selectedDate'>{this.getSelectedDate()}</h4></div>
                         </Col>
                         <Col xs={1} md={1} lg={1}>
                             <div style={divStyle2}>
                                 <Button bsStyle="info" onClick={this.handleNext}><Glyphicon glyph="chevron-right" /></Button>
                             </div>
                         </Col>
-                        <Col xs={6} md={6} lg={6}>
-                            <div style={divStyle2}>
-                                
-                            </div>
-                        </Col>
+                        <Col xs={6} md={6} lg={6}></Col>
                         <Col xs={2} md={2} lg={2}>
                             <div>
                                 <span>Autorefresh</span>
@@ -123,11 +120,12 @@ class MyDiary extends React.Component {
                     </Row>
                     <Row>
                         <Col xs={12} md={12} lg={12}>
-                            <iframe style={divStyle} key={this.state.iframeKey} src={diaryLink} height={this.state.iframeHeigh} width="100%"></iframe>
+                            <iframe title="diary report" style={divStyle} key={this.state.iframeKey} src={diaryLink} height={this.state.iframeHeigh} width="100%"></iframe>
                         </Col>
                     </Row>
                 </Grid>
             </div>
+            <Footer />
         </div>;
     }
 }

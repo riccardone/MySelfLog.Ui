@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Nav, NavItem, Navbar, Button } from 'react-bootstrap';
+import { Nav, NavItem, Navbar } from 'react-bootstrap';
 import './navbar.top.css';
 
 class NavBarTopNoAuth extends Component {

@@ -31,7 +31,7 @@ export const makeMainRoutes = () => {
           <Route exact path="/" render={(props) => <Home auth={auth} {...props} />} />
           <Route exact path="/home" render={(props) => <Home auth={auth} {...props} />} />
           <Route exact path="/diary/:diaryname" render={(props) => <MyDiary {...props} />} />
-          <Route path="/diary" render={(props) => <Diary auth={auth} {...props} />} />          
+          <Route exact path="/diary" render={(props) => <Diary auth={auth} {...props} />} />          
           <Route path="/callback" render={(props) => {
             handleAuthentication(props);
             return <Callback {...props} />;
