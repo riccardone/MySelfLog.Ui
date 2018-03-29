@@ -41,7 +41,7 @@ class CreateDiary extends React.Component {
 
     handleDiaryCreated(data) {
         toast.info(data.message);        
-        window.location = "/diary/" + data.diaryName;
+        window.location = "/diary";
     }
 
     handleDiaryNameIsAvailable(data) {        
