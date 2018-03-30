@@ -15,33 +15,23 @@ class NavBarTopNoAuth extends Component {
   }
 
   render() {
-    const brandStyle = {
-      color: 'white'
-    };
-
-    const diaryTitleStyle = {
-      color: 'white',
-      fontWeight: 'bold',
-      fontSize: '1.5em'
-    };
-
-    var diaryTitle = 'Diary: ' + this.state.diaryName;
+    const styles = {
+      header: {             
+        borderColor: 'transparent',
+        borderBottomColor: '#CCC',
+        borderBottomWidth: '3px'                  
+      },
+      title: {
+        color: 'white'       
+      }
+  };
 
     return (
-      <div>
-        <Navbar fluid>
-          <Navbar.Header>
-            <Navbar.Brand style={brandStyle}>
-              MySelfLog
-            </Navbar.Brand>
-          </Navbar.Header>
-          <Nav pullRight>
-            <NavItem style={diaryTitleStyle} disabled>
-              {diaryTitle}
-            </NavItem>
-          </Nav>
-        </Navbar>
+      <Navbar style={styles.header}>
+      <div id="header">      
+        <h1 id="title" style={styles.title}>Diary: {this.state.diaryName}</h1>
       </div>
+      </Navbar>
     );
   }
 }

@@ -5,6 +5,7 @@ import NavBarTopNoAuth from '../navbar.noauth.top';
 import Switch from 'react-toggle-switch';
 import 'react-toggle-switch/dist/css/switch.min.css';
 import moment from 'moment';
+import './mydiary.css';
 
 class MyDiary extends React.Component {
     constructor(props) {
@@ -78,49 +79,47 @@ class MyDiary extends React.Component {
         var diaryLink = getLink(this.state.diaryName, this.state.diaryType, this.state.diaryFormat, this.state.from, this.state.to);
         var diaryName = this.state.diaryName;
 
-        const divStyle = {
-            margin: '0px',
-            border: '0px'
-        };
-
-        const divStyle2 = {
-            //border: '1px solid black',
-            margin: '0px',
-            padding: '0px',
-            textAlign: 'center'
+        const styles = {
+            horizontalUl: {
+                listStyleType: 'none',
+                margin: '0',
+                padding: '0'
+            },
+            horizontalLi: {
+                display: 'inline',
+                textAlign: 'center',
+                margin: '2px'
+            },
+            divStyle: {
+                margin: '0px',
+                border: '0px'
+            }
         };
 
         return <div>
             <NavBarTopNoAuth diaryName={diaryName} />
             <div className="container">
-                <Grid>
-                    <Row>
-                        <Col xs={1} md={1} lg={1}>
-                            <div style={divStyle2}>
-                                <Button bsStyle="info" onClick={this.handlePrev}><Glyphicon glyph="chevron-left" /></Button>
-                            </div>
+                <Grid fluid className="noPadding">
+                    <Row className="noMargin">
+                        <Col className="noPadding" xs={10} md={8} lg={8}>
+                            <ul id="dateSelector" style={styles.horizontalUl}>
+                                <li style={styles.horizontalLi}><Button id="previousDate" bsStyle="info" onClick={this.handlePrev}><Glyphicon glyph="chevron-left" /></Button></li>
+                                <li style={styles.horizontalLi}><span id='selectedDate'>{this.getSelectedDate()}</span></li>
+                                <li style={styles.horizontalLi}><Button id="nextDate" bsStyle="info" onClick={this.handleNext}><Glyphicon glyph="chevron-right" /></Button></li>
+                            </ul>
                         </Col>
-                        <Col xs={2} md={2} lg={2}>
-                            <div style={divStyle2}><h4 id='selectedDate'>{this.getSelectedDate()}</h4></div>
-                        </Col>
-                        <Col xs={1} md={1} lg={1}>
-                            <div style={divStyle2}>
-                                <Button bsStyle="info" onClick={this.handleNext}><Glyphicon glyph="chevron-right" /></Button>
-                            </div>
-                        </Col>
-                        <Col xs={6} md={6} lg={6}></Col>
-                        <Col xs={2} md={2} lg={2}>
+                        <Col className="noPadding" xs={2} md={4} lg={4}>
                             <div>
-                                <span>Autorefresh</span>
+                                <span>Auto Refresh</span>
                             </div>
                             <div>
                                 <Switch onClick={this.toggleSwitch} on={this.state.switched} />
                             </div>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col xs={12} md={12} lg={12}>
-                            <iframe title="diary report" style={divStyle} key={this.state.iframeKey} src={diaryLink} height={this.state.iframeHeigh} width="100%"></iframe>
+                    <Row className="noMargin">
+                        <Col className="noPadding" xs={12} md={12} lg={12}>
+                            <iframe title="diary report" style={styles.divStyle} key={this.state.iframeKey} src={diaryLink} height={this.state.iframeHeigh} width="100%"></iframe>
                         </Col>
                     </Row>
                 </Grid>
