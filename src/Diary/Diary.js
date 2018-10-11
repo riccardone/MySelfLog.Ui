@@ -3,6 +3,7 @@ import NavBarTop from '../navbar.top';
 import Footer from '../footer';
 import Bus from '../bus';
 import DiaryLog from './DiaryLog';
+import DiaryLink from './DiaryLink';
 import DiaryReport from './DiaryReport';
 import CreateDiary from './CreateDiary';
 import { ToastContainer, toast } from 'react-toastify';
@@ -41,7 +42,7 @@ class Diary extends Component {
       } else {
         toast.error(err);
       }
-    })
+    });
   }
 
   // redux action (TODO)
@@ -54,21 +55,24 @@ class Diary extends Component {
   }
 
   render() {
-    const { isAuthenticated } = this.props.auth;    
+    const { isAuthenticated } = this.props.auth;
 
     function ShowDiaryLog(props) {
       if (props.diaryName) {
-        return <DiaryLog />
+        return <DiaryLog />;
       } else {
-        return <p></p>;
+        return <p />;
       }
-    }    
+    }
 
     function ShowCreateDiary(props) {
-      if (props.diaryName) {        
-        return <DiaryReport diaryName={props.diaryName} /> 
+      if (props.diaryName) {
+        return (<div>
+          <DiaryLink diaryName={props.diaryName} />
+          <DiaryReport diaryName={props.diaryName} />
+        </div>);
       } else {
-        return <CreateDiary />
+        return <CreateDiary />;
       }
     }
 
@@ -77,31 +81,29 @@ class Diary extends Component {
         <NavBarTop auth={this.props.auth} {...this.props} />
         <div className="container">
           <ToastContainer
-            hideProgressBar={true}
-            newestOnTop={true}
+              hideProgressBar
+              newestOnTop
           />
           {
-            isAuthenticated() && (
-              <div>
-                <ShowDiaryLog diaryName={this.state.diaryName} />
-                <ShowCreateDiary diaryName={this.state.diaryName} />                
-                <br />
-              </div>
-            )
+            isAuthenticated() &&
+            <div>
+              <ShowDiaryLog diaryName={this.state.diaryName} />
+              <ShowCreateDiary diaryName={this.state.diaryName} />
+              <br />
+            </div>
           }
           {
-            !isAuthenticated() && (
-              <h4>
-                You are not logged in! Please{' '}
-                <a
+            !isAuthenticated() &&
+            <h4>
+              You are not logged in! Please{' '}
+              <a
                   style={{ cursor: 'pointer' }}
                   onClick={this.login.bind(this)}
-                >
-                  Log In
+              >
+                Log In
                 </a>
-                {' '}to continue.
+              {' '}to continue.
               </h4>
-            )
           }
         </div>
         <Footer />

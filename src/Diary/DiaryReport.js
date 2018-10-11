@@ -1,8 +1,8 @@
 import React from 'react';
-import { InputGroup, Button, Grid, Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Grid, Row, Col, ButtonGroup, Button, Glyphicon } from 'react-bootstrap';
 import Switch from 'react-toggle-switch';
 import Bus from '../bus';
+import moment from "moment";
 import 'react-toggle-switch/dist/css/switch.min.css';
 var bus = Bus();
 
@@ -14,14 +14,50 @@ class DiaryReport extends React.Component {
             iframeKey: 0,
             iframeHeigh: 800,
             switched: true,
-            intervalId: this.setAutoRefresh()
-        };        
-        this.getDiaryLink = this.getDiaryLink.bind(this);        
-        this.getMyDiaryLink = this.getMyDiaryLink.bind(this);   
+            intervalId: this.setAutoRefresh(),
+            from: moment()
+                .startOf("day")
+                .format("YYYY-MM-DD HH:mm:ss"),
+            to: moment()
+                .endOf("day")
+                .format("YYYY-MM-DD HH:mm:ss"),
+            diaryName: this.props.diaryName,
+            diaryFormat: "mgdl",
+            diaryType: "all"
+        };
         // preserve the initial state in a new object
         this.baseState = this.state;
+        this.handlePrev = this.handlePrev.bind(this);
+        this.handleNext = this.handleNext.bind(this);
+        this.getSelectedDate = this.getSelectedDate.bind(this);
         this.subscribeForEvents();
     }
+
+    handlePrev() {
+        var day = moment(this.state.from).subtract(1, "days");
+        this.setState({
+            from: day.startOf("day").format("YYYY-MM-DD HH:mm:ss"),
+            to: day.endOf("day").format("YYYY-MM-DD HH:mm:ss")
+        });
+    }
+
+    handleNext() {
+        var day = moment(this.state.from).add(1, "days");
+        this.setState({
+            from: day.startOf("day").format("YYYY-MM-DD HH:mm:ss"),
+            to: day.endOf("day").format("YYYY-MM-DD HH:mm:ss")
+        });
+    }
+
+    mmol = () => {
+        var _this = this;
+        _this.setState({ diaryFormat: 'mmol' });
+    };
+
+    mgdl = () => {
+        var _this = this;
+        _this.setState({ diaryFormat: 'mgdl' });
+    };
 
     toggleSwitch = () => {
         var _this = this;
@@ -36,21 +72,7 @@ class DiaryReport extends React.Component {
         _this.setState({ switched: switched });
     };
 
-    getDiaryLink = (diaryName) => {
-        if (process.env.NODE_ENV === 'production') {
-            return 'http://www.myselflog.com:5005/diary/' + diaryName + '/all/mgdl';
-        }
-        return 'http://localhost:5005/diary/' + diaryName + '/all/mgdl';
-    }
-
-    getMyDiaryLink = (diaryName) => {
-        if (process.env.NODE_ENV === 'production') {
-            return 'http://www.myselflog.com/diary/' + diaryName + '';
-        }
-        return 'http://localhost:3000/diary/' + diaryName + '';
-    }
-
-    setAutoRefresh() {        
+    setAutoRefresh() {
         return setInterval(() => this.setState(s => ({ iframeKey: s.iframeKey + 1 })), 10000);
     }
 
@@ -58,46 +80,117 @@ class DiaryReport extends React.Component {
         bus.subscribe("DiaryCreated", this.handleDiaryCreated);
     }
 
+    getSelectedDate = () => {
+        var locale = window.navigator.userLanguage || window.navigator.language;
+        return moment(this.state.from)
+            .locale(locale)
+            .format("LL"); //'YYYY-MM-DD');
+    }
+
     render() {
-        var diaryLink = this.getDiaryLink(this.props.diaryName);
-        var myDiaryLink = this.getMyDiaryLink(this.props.diaryName);
+        function getLink(diaryName, diaryType, diaryFormat, from, to) {
+            if (process.env.NODE_ENV === "production") {
+                return (
+                    "http://www.myselflog.com:5005/diary/" +
+                    diaryName +
+                    "/" +
+                    diaryType +
+                    "/" +
+                    diaryFormat +
+                    "/from/" +
+                    from +
+                    "/to/" +
+                    to +
+                    ""
+                );
+            }
+            return (
+                "http://localhost:5005/diary/" +
+                diaryName +
+                "/" +
+                diaryType +
+                "/" +
+                diaryFormat +
+                "/from/" +
+                from +
+                "/to/" +
+                to +
+                ""
+            );
+        }
+
+        var diaryLink = getLink(
+            this.state.diaryName,
+            this.state.diaryType,
+            this.state.diaryFormat,
+            this.state.from,
+            this.state.to
+        );
 
         const divStyle = {
             margin: '0px',
             border: '0px'
         };
 
-        return <div>
+        const styles = {
+            horizontalUl: {
+                listStyleType: "none",
+                margin: "0",
+                padding: "0"
+            },
+            horizontalLi: {
+                display: "inline",
+                textAlign: "center",
+                margin: "2px"
+            },
+            divStyle: {
+                margin: "0px",
+                border: "0px"
+            }
+        };
+
+        return (<div>
             <Grid>
-                <Row>
-                    <Col xs={4} md={4} lg={4}>
-                        <ControlLabel>Diary Link</ControlLabel><br />
-                        <FormGroup>
-                            <InputGroup>
-                                <FormControl type="text" name="diaryLink" onChange={({ target: { myDiaryLink } }) => this.setState({ diaryLink: myDiaryLink, copied: false })} value={myDiaryLink} />
-                                <InputGroup.Button>
-                                    <CopyToClipboard text={myDiaryLink} onCopy={() => this.setState({ copied: true })}><Button>copy</Button></CopyToClipboard>
-                                </InputGroup.Button>
-                            </InputGroup>
-                        </FormGroup>
+                <Row className="show-grid">
+                    <Col xs={4} md={4}>
+                        <ul id="dateSelector" style={styles.horizontalUl}>
+                            <li style={styles.horizontalLi}>
+                                <Button id="previousDate" bsStyle="info" onClick={this.handlePrev}>
+                                    <Glyphicon glyph="chevron-left" />
+                                </Button>
+                            </li>
+                            <li style={styles.horizontalLi}>
+                                <span id="selectedDate">{this.getSelectedDate()}</span>
+                            </li>
+                            <li style={styles.horizontalLi}>
+                                <Button id="nextDate" bsStyle="info" onClick={this.handleNext}>
+                                    <Glyphicon glyph="chevron-right" />
+                                </Button>
+                            </li>
+                        </ul>
                     </Col>
-                    <Col xs={6} md={6} lg={6}></Col>
-                    <Col xs={2} md={2} lg={2}>
+                    <Col xs={4} md={4}>
+                        <ButtonGroup>
+                            <Button onClick={this.mmol} className={this.state.diaryFormat === 'mmol' ? "selected" : "unselected"}>mmol/L</Button>
+                            <Button onClick={this.mgdl} className={this.state.diaryFormat === 'mgdl' ? "selected" : "unselected"}>mg/dL</Button>
+                        </ButtonGroup>
+                    </Col>
+                    <Col xs={4} md={4}>
                         <div>
                             <span>Autorefresh</span>
                         </div>
                         <div>
                             <Switch onClick={this.toggleSwitch} on={this.state.switched} />
-                        </div>
+                        </div>                        
                     </Col>
                 </Row>
-                <Row>
-                    <Col xs={12} md={12} lg={12}>
-                        <iframe title="diary report" style={divStyle} key={this.state.iframeKey} src={diaryLink} height={this.state.iframeHeigh} width="100%"></iframe>
+                <Row className="show-grid">
+                    <Col>
+                        <iframe title="diary report" style={divStyle} key={this.state.iframeKey} src={diaryLink} height={this.state.iframeHeigh} width="100%" />
                     </Col>
                 </Row>
             </Grid>
-        </div>;
+        </div>);
     }
 }
 
