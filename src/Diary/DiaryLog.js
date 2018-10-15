@@ -114,7 +114,7 @@ class DiaryLog extends React.Component {
         };
 
         // return (<input type="text" value={text} onChange={this.change} />);
-        return <form onSubmit={this.handleSubmit} ref={(el) => this.myFormRef = el}>
+        return (<form onSubmit={this.handleSubmit} ref={(el) => this.myFormRef = el}>
 
             <FormGroup controlId="formBasicText">
                 <Grid>
@@ -154,7 +154,7 @@ class DiaryLog extends React.Component {
                     </Row>
                 </Grid>
             </FormGroup>
-        </form>
+        </form>);
     }
 }
 
