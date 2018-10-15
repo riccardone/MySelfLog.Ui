@@ -92,9 +92,10 @@ class DiaryReport extends React.Component {
 
   getSelectedDate = () => {
     var locale = window.navigator.userLanguage || window.navigator.language;
+
     return moment(this.state.from)
       .locale(locale)
-      .format("LL"); //'YYYY-MM-DD');
+      .format("YYYY-MM-DD"); //'LL');
   };
 
   render() {
@@ -163,7 +164,7 @@ class DiaryReport extends React.Component {
       <div>
         <Grid>
           <Row className="show-grid">
-            <Col xs={4} md={4}>
+            <Col xs={6} md={4}>
               <ul id="dateSelector" style={styles.horizontalUl}>
                 <li style={styles.horizontalLi}>
                   <Button
@@ -188,7 +189,7 @@ class DiaryReport extends React.Component {
                 </li>
               </ul>
             </Col>
-            <Col xs={4} md={4}>
+            <Col xs={3} md={4}>
               <ButtonGroup>
                 <Button
                   onClick={this.mmol}
@@ -208,11 +209,11 @@ class DiaryReport extends React.Component {
                       : "unselected"
                   }
                 >
-                  mg/dL
+                  mg/dL&nbsp;
                 </Button>
               </ButtonGroup>
             </Col>
-            <Col xs={4} md={4}>
+            <Col xs={3} md={4}>
               <div>
                 <span>Autorefresh</span>
               </div>
