@@ -99,8 +99,23 @@ class DiaryReport extends React.Component {
 
   render() {
     function getLink(diaryName, diaryType, diaryFormat, from, to) {
+      if (process.env.NODE_ENV === "production") {
+        return (
+          "http://api.myselflog.com:5005/diary/" +
+          diaryName +
+          "/" +
+          diaryType +
+          "/" +
+          diaryFormat +
+          "/from/" +
+          from +
+          "/to/" +
+          to +
+          ""
+        );
+      }
       return (
-        "http://myselflog-reports:5005/diary/" +
+        "http://localhost:5005/diary/" +
         diaryName +
         "/" +
         diaryType +
