@@ -4,7 +4,7 @@ var moment = require('moment');
 var bus = Bus();
 var bufferedLogs = [];
 var interval = 3000;
-var apiLink = process.env.NODE_ENV === 'production' ? "http://api.myselflog.com:5001" : "http://myselflog-api:5001";
+var apiLink = "http://myselflog-api:5001";
 
 bus.subscribe("LogFormFilled", saveLog);
 bus.subscribe("CreateDiary", createDiary);
