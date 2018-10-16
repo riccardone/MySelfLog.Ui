@@ -5,7 +5,8 @@ import {
   Col,
   ButtonGroup,
   Button,
-  Glyphicon
+  Glyphicon,
+  ButtonToolbar
 } from "react-bootstrap";
 import Switch from "react-toggle-switch";
 import Bus from "../bus";
@@ -55,6 +56,26 @@ class DiaryReport extends React.Component {
       to: day.endOf("day").format("YYYY-MM-DD HH:mm:ss")
     });
   }
+
+  setAll = () => {
+    var _this = this;
+    _this.setState({ diaryType: "all" });
+  };
+
+  setTerapies = () => {
+    var _this = this;
+    _this.setState({ diaryType: "terapies" });
+  };
+
+  setValues = () => {
+    var _this = this;
+    _this.setState({ diaryType: "values" });
+  };
+
+  setCalories = () => {
+    var _this = this;
+    _this.setState({ diaryType: "calories" });
+  };
 
   mmol = () => {
     var _this = this;
@@ -164,62 +185,97 @@ class DiaryReport extends React.Component {
       <div>
         <Grid>
           <Row className="show-grid">
-            <Col xs={6} md={4}>
-              <ul id="dateSelector" style={styles.horizontalUl}>
-                <li style={styles.horizontalLi}>
-                  <Button
-                    id="previousDate"
-                    bsStyle="info"
-                    onClick={this.handlePrev}
-                  >
-                    <Glyphicon glyph="chevron-left" />
-                  </Button>
-                </li>
-                <li style={styles.horizontalLi}>
-                  <span id="selectedDate">{this.getSelectedDate()}</span>
-                </li>
-                <li style={styles.horizontalLi}>
-                  <Button
-                    id="nextDate"
-                    bsStyle="info"
-                    onClick={this.handleNext}
-                  >
-                    <Glyphicon glyph="chevron-right" />
-                  </Button>
-                </li>
-              </ul>
-            </Col>
-            <Col xs={3} md={4}>
+            <Col xs={8} md={8}>
               <ButtonGroup>
                 <Button
-                  onClick={this.mmol}
-                  className={
-                    this.state.diaryFormat === "mmol"
-                      ? "selected"
-                      : "unselected"
-                  }
+                  id="previousDate"
+                  bsStyle="info"
+                  onClick={this.handlePrev}
                 >
-                  mmol/L
+                  <Glyphicon glyph="chevron-left" />
                 </Button>
-                <Button
-                  onClick={this.mgdl}
-                  className={
-                    this.state.diaryFormat === "mgdl"
-                      ? "selected"
-                      : "unselected"
-                  }
-                >
-                  mg/dL&nbsp;
+                <Button>
+                  <span id="selectedDate">{this.getSelectedDate()}</span>
+                </Button>
+                <Button id="nextDate" bsStyle="info" onClick={this.handleNext}>
+                  <Glyphicon glyph="chevron-right" />
                 </Button>
               </ButtonGroup>
             </Col>
-            <Col xs={3} md={4}>
+            <Col xs={4} md={4}>
               <div>
                 <span>Autorefresh</span>
               </div>
               <div>
                 <Switch onClick={this.toggleSwitch} on={this.state.switched} />
               </div>
+            </Col>
+            <Col xs={12} md={12}>
+              <ButtonToolbar>
+                <ButtonGroup>
+                  <Button
+                    onClick={this.mmol}
+                    className={
+                      this.state.diaryFormat === "mmol"
+                        ? "selected"
+                        : "unselected"
+                    }
+                  >
+                    mmol/L
+                  </Button>
+                  <Button
+                    onClick={this.mgdl}
+                    className={
+                      this.state.diaryFormat === "mgdl"
+                        ? "selected"
+                        : "unselected"
+                    }
+                  >
+                    mg/dL&nbsp;
+                  </Button>
+                </ButtonGroup>
+
+                <ButtonGroup>
+                  <Button
+                    onClick={this.setAll}
+                    className={
+                      this.state.diaryType === "all" ? "selected" : "unselected"
+                    }
+                  >
+                    All
+                  </Button>
+                  <Button
+                    onClick={this.setTerapies}
+                    className={
+                      this.state.diaryType === "terapies"
+                        ? "selected"
+                        : "unselected"
+                    }
+                  >
+                    Terapies
+                  </Button>
+                  <Button
+                    onClick={this.setCalories}
+                    className={
+                      this.state.diaryType === "calories"
+                        ? "selected"
+                        : "unselected"
+                    }
+                  >
+                    Cals
+                  </Button>
+                  <Button
+                    onClick={this.setValues}
+                    className={
+                      this.state.diaryType === "values"
+                        ? "selected"
+                        : "unselected"
+                    }
+                  >
+                    Glucose Level
+                  </Button>
+                </ButtonGroup>
+              </ButtonToolbar>
             </Col>
           </Row>
           <Row className="show-grid">
