@@ -185,23 +185,6 @@ class DiaryReport extends React.Component {
       <div>
         <Grid>
           <Row className="show-grid">
-            <Col xs={8} md={8}>
-              <ButtonGroup>
-                <Button
-                  id="previousDate"
-                  bsStyle="info"
-                  onClick={this.handlePrev}
-                >
-                  <Glyphicon glyph="chevron-left" />
-                </Button>
-                <Button>
-                  <span id="selectedDate">{this.getSelectedDate()}</span>
-                </Button>
-                <Button id="nextDate" bsStyle="info" onClick={this.handleNext}>
-                  <Glyphicon glyph="chevron-right" />
-                </Button>
-              </ButtonGroup>
-            </Col>
             <Col xs={4} md={4}>
               <div>
                 <span>Autorefresh</span>
@@ -212,6 +195,26 @@ class DiaryReport extends React.Component {
             </Col>
             <Col xs={12} md={12}>
               <ButtonToolbar>
+                <ButtonGroup>
+                  <Button
+                    id="previousDate"
+                    bsStyle="info"
+                    onClick={this.handlePrev}
+                  >
+                    <Glyphicon glyph="chevron-left" />
+                  </Button>
+                  <Button>
+                    <span id="selectedDate">{this.getSelectedDate()}</span>
+                  </Button>
+                  <Button
+                    id="nextDate"
+                    bsStyle="info"
+                    onClick={this.handleNext}
+                  >
+                    <Glyphicon glyph="chevron-right" />
+                  </Button>
+                </ButtonGroup>
+
                 <ButtonGroup>
                   <Button
                     onClick={this.mmol}
