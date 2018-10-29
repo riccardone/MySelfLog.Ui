@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Nav, NavItem, Navbar } from 'react-bootstrap';
-import './navbar.top.css';
+import React, { Component } from "react";
+import { Navbar } from "react-bootstrap";
+import "./navbar.top.css";
 
 class NavBarTopNoAuth extends Component {
   constructor(props) {
@@ -16,21 +16,23 @@ class NavBarTopNoAuth extends Component {
 
   render() {
     const styles = {
-      header: {             
-        borderColor: 'transparent',
-        borderBottomColor: '#CCC',
-        borderBottomWidth: '3px'                  
+      header: {
+        borderColor: "transparent",
+        borderBottomColor: "#CCC",
+        borderBottomWidth: "3px"
       },
       title: {
-        color: 'white'       
+        color: "white"
       }
-  };
+    };
 
     return (
       <Navbar style={styles.header}>
-      <div id="header">      
-        <h1 id="title" style={styles.title}>Diary: {this.state.diaryName}</h1>
-      </div>
+        <div id="header">
+          <h1 id="title" style={styles.title}>
+            Diary: {this.state.diaryName}
+          </h1>
+        </div>
       </Navbar>
     );
   }

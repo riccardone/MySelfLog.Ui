@@ -13,6 +13,38 @@ bus.subscribe("LogFormFilled", saveLog);
 bus.subscribe("CreateDiary", createDiary);
 bus.subscribe("GetDiaryName", getDiaryName);
 bus.subscribe("SearchForDuplicates", searchForDuplicates);
+bus.subscribe("SearchForADay", searchForADay);
+
+function searchForADay(day) {
+  var uri =
+    apiLink +
+    "/api/v1/diary/" +
+    day.diaryName +
+    "/" +
+    day.diaryType +
+    "/" +
+    day.diaryFormat +
+    "/from/" +
+    day.from +
+    "/to/" +
+    day.to +
+    "";
+  fetch(uri, {
+    method: "GET"
+  })
+    .then(resp => {
+      if (resp.ok === true) {
+        resp.json().then(body => {
+          body["from"] = day.from;
+          body["to"] = day.to;
+          bus.publish("SearchForADayCompleted", body);
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
 
 function createDiary(obj) {
   var messageBody = buildCreateDiaryBody(obj);

@@ -8,30 +8,32 @@ import {
   Glyphicon,
   ButtonToolbar
 } from "react-bootstrap";
-import Switch from "react-toggle-switch";
 import Bus from "../bus";
 import moment from "moment";
+import DiaryDays from "./DiaryDays";
 import "react-toggle-switch/dist/css/switch.min.css";
 var bus = Bus();
+
+// TODO import the elasticSearch repo and inject to subcomponent or import in a subcomponent?
 
 class DiaryReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isAvailable: false,
-      iframeKey: 0,
-      iframeHeigh: 800,
       switched: true,
-      intervalId: this.setAutoRefresh(),
-      from: moment()
-        .startOf("day")
-        .format("YYYY-MM-DD HH:mm:ss"),
-      to: moment()
-        .endOf("day")
-        .format("YYYY-MM-DD HH:mm:ss"),
+      from: moment().startOf("day"),
+      to: moment().endOf("day"),
       diaryName: this.props.diaryName,
       diaryFormat: "mgdl",
-      diaryType: "all"
+      diaryType: "all",
+      days: this.getDiaryDays(
+        moment().startOf("day"),
+        moment().endOf("day"),
+        this.props.diaryName,
+        "all",
+        "mgdl"
+      )
     };
     // preserve the initial state in a new object
     this.baseState = this.state;
@@ -41,21 +43,49 @@ class DiaryReport extends React.Component {
     this.subscribeForEvents();
   }
 
-  handlePrev() {
-    var day = moment(this.state.from).subtract(1, "days");
-    this.setState({
-      from: day.startOf("day").format("YYYY-MM-DD HH:mm:ss"),
-      to: day.endOf("day").format("YYYY-MM-DD HH:mm:ss")
+  handlePrev = () => {
+    this.changeDay("prev");
+  };
+
+  handleNext = () => {
+    this.changeDay("next");
+  };
+
+  changeDay(direction) {
+    var _this = this;
+    var day =
+      direction === "prev"
+        ? moment(this.state.from).subtract(1, "days")
+        : moment(this.state.from).add(1, "days");
+    _this.setState({
+      from: day.startOf("day"),
+      to: day.endOf("day"),
+      days: _this.getDiaryDays(
+        day.startOf("day"),
+        day.endOf("day"),
+        _this.state.diaryName,
+        _this.state.diaryType,
+        _this.state.diaryFormat
+      )
     });
   }
 
-  handleNext() {
-    var day = moment(this.state.from).add(1, "days");
-    this.setState({
-      from: day.startOf("day").format("YYYY-MM-DD HH:mm:ss"),
-      to: day.endOf("day").format("YYYY-MM-DD HH:mm:ss")
+  sevenDays = () => {
+    var _this = this;
+    var from = moment().subtract(7, "days");
+    var to = moment();
+    _this.setState({
+      from: from.startOf("day"),
+      to: to.endOf("day"),
+      days: _this.getDiaryDays(
+        from,
+        to,
+        _this.state.diaryName,
+        _this.state.diaryType,
+        _this.state.diaryFormat
+      )
     });
-  }
+  };
 
   setAll = () => {
     var _this = this;
@@ -87,112 +117,46 @@ class DiaryReport extends React.Component {
     _this.setState({ diaryFormat: "mgdl" });
   };
 
-  toggleSwitch = () => {
-    var _this = this;
-    var switched = !_this.state.switched;
-    if (!switched) {
-      clearInterval(_this.state.intervalId);
-    } else {
-      _this.setState({
-        intervalId: _this.setAutoRefresh()
-      });
-    }
-    _this.setState({ switched: switched });
-  };
-
-  setAutoRefresh() {
-    return setInterval(
-      () => this.setState(s => ({ iframeKey: s.iframeKey + 1 })),
-      10000
-    );
-  }
-
   subscribeForEvents = () => {
     bus.subscribe("DiaryCreated", this.handleDiaryCreated);
   };
 
   getSelectedDate = () => {
+    var _this = this;
     var locale = window.navigator.userLanguage || window.navigator.language;
+    return _this.state.from.locale(locale).format("YYYY-MM-DD"); //'LL');
+  };
 
-    return moment(this.state.from)
-      .locale(locale)
-      .format("YYYY-MM-DD"); //'LL');
+  getDiaryDays = (from, to, diaryName, diaryType, diaryFormat) => {
+    var diaryDays = [];
+    var day = from;
+    addLink(day, diaryName, diaryType, diaryFormat);
+    do {
+      if (day.isSame(to, "day")) {
+        break;
+      }
+      day.add(1, "day");
+      addLink(day, diaryName, diaryType, diaryFormat);
+    } while (!day.isSame(to, "day"));
+
+    return diaryDays;
+
+    function addLink(day, diaryName, diaryType, diaryFormat) {
+      diaryDays.push({
+        from: day.startOf("day").format("YYYY-MM-DD HH:mm:ss"),
+        to: day.endOf("day").format("YYYY-MM-DD HH:mm:ss"),
+        diaryName: diaryName,
+        diaryType: diaryType,
+        diaryFormat: diaryFormat
+      });
+    }
   };
 
   render() {
-    function getLink(diaryName, diaryType, diaryFormat, from, to) {
-      if (process.env.NODE_ENV === "production") {
-        return (
-          "http://api.myselflog.com:5005/diary/" +
-          diaryName +
-          "/" +
-          diaryType +
-          "/" +
-          diaryFormat +
-          "/from/" +
-          from +
-          "/to/" +
-          to +
-          ""
-        );
-      }
-      return (
-        "http://localhost:5005/diary/" +
-        diaryName +
-        "/" +
-        diaryType +
-        "/" +
-        diaryFormat +
-        "/from/" +
-        from +
-        "/to/" +
-        to +
-        ""
-      );
-    }
-
-    var diaryLink = getLink(
-      this.state.diaryName,
-      this.state.diaryType,
-      this.state.diaryFormat,
-      this.state.from,
-      this.state.to
-    );
-
-    const divStyle = {
-      margin: "0px",
-      border: "0px"
-    };
-
-    const styles = {
-      horizontalUl: {
-        listStyleType: "none",
-        margin: "0",
-        padding: "0"
-      },
-      horizontalLi: {
-        display: "inline",
-        textAlign: "center",
-        margin: "2px"
-      },
-      divStyle: {
-        margin: "0px",
-        border: "0px"
-      }
-    };
-
     return (
       <div>
         <Grid>
           <Row className="show-grid">
-            <Col xs={4} md={4}>
-              <div>
-                <span>Autorefresh</span>
-              </div>
-              <div>
-                <Switch onClick={this.toggleSwitch} on={this.state.switched} />
-              </div>
-            </Col>
             <Col xs={12} md={12}>
               <ButtonToolbar>
                 <ButtonGroup>
@@ -212,6 +176,14 @@ class DiaryReport extends React.Component {
                     onClick={this.handleNext}
                   >
                     <Glyphicon glyph="chevron-right" />
+                  </Button>
+                  <Button
+                    onClick={this.sevenDays}
+                    className={
+                      this.state.period === "7days" ? "selected" : "unselected"
+                    }
+                  >
+                    7 days
                   </Button>
                 </ButtonGroup>
 
@@ -281,18 +253,7 @@ class DiaryReport extends React.Component {
               </ButtonToolbar>
             </Col>
           </Row>
-          <Row className="show-grid">
-            <Col>
-              <iframe
-                title="diary report"
-                style={divStyle}
-                key={this.state.iframeKey}
-                src={diaryLink}
-                height={this.state.iframeHeigh}
-                width="100%"
-              />
-            </Col>
-          </Row>
+          <DiaryDays days={this.state.days} iframeHeigh={700} />
         </Grid>
       </div>
     );
