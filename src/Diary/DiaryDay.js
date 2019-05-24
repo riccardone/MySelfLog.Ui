@@ -1,28 +1,8 @@
 import React, { Component } from "react";
 import {ThemeContext} from '../theme.context';
-// import { TimeSeries, TimeRange } from "pondjs";
-// import { LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
-// import {
-//   Charts,
-//   ChartContainer,
-//   ChartRow,
-//   YAxis,
-//   LineChart,
-//   Resizable
-// } from "react-timeseries-charts";
-
-// import 'morris.js/morris.css';
-// import 'morris.js/morris.js';
 import moment from "moment";
 import DataReader from "./dataReader";
-// const webpack = require('webpack');
-// module.exports = {
-//     plugins: [
-//         new webpack.ProvidePlugin({
-//             Raphael: 'raphael'
-//         })
-//     ]    
-// };
+
 var reader = new DataReader();
 
 class DiaryDay extends Component {
@@ -34,11 +14,6 @@ class DiaryDay extends Component {
       from: moment(this.props.day.from).valueOf(),
       to: moment(this.props.day.to).valueOf(),
       data: []
-      // timeseries: new TimeSeries(),
-      // timerange: new TimeRange([
-      //   moment(this.props.day.from).valueOf(),
-      //   moment(this.props.day.to).valueOf()
-      // ])
     };
     // preserve the initial state in a new object
     this.baseState = this.state;
@@ -68,16 +43,7 @@ class DiaryDay extends Component {
       }
     });
     _this.setState({
-      data: points
-      // timeseries: new TimeSeries({
-      //   name: "diary",
-      //   columns: ["time", "values", "terapies", "calories"],
-      //   points: points
-      // }),
-      // timerange: new TimeRange([
-      //   moment(_this.props.day.from).valueOf(),
-      //   moment(_this.props.day.to).valueOf()
-      // ])
+      data: points      
     });
   };
 
