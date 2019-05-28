@@ -11,10 +11,27 @@ import {
 import Bus from "../bus";
 import moment from "moment";
 import DiaryDays from "./DiaryDays";
+import DataReader from "./dataReader";
 import "react-toggle-switch/dist/css/switch.min.css";
 var bus = Bus();
-
 // TODO import the elasticSearch repo and inject to subcomponent or import in a subcomponent?
+var reader = new DataReader();
+
+const chartData = [
+  { value: 14, time: 1503617297689 },
+  { value: 15, time: 1503616962277 },
+  { value: 15, time: 1503616882654 },
+  { value: 20, time: 1503613184594 },
+  { value: 15, time: 1503611308914 }
+];
+
+const chartData2 = [
+  { value: 5, time: 1503617297689 },
+  { value: 7, time: 1503616962277 },
+  { value: 10, time: 1503616882654 },
+  { value: 6, time: 1503613184594 },
+  { value: 3, time: 1503611308914 }
+];
 
 class DiaryReport extends React.Component {
   constructor(props) {
@@ -253,7 +270,7 @@ class DiaryReport extends React.Component {
               </ButtonToolbar>
             </Col>
           </Row>
-          <DiaryDays days={this.state.days} iframeHeigh={700} />
+          <DiaryDays days={this.state.days} iframeHeigh={700} series={[{'name': 'Glucose Level', 'data': chartData}, {'name': 'Terapies', 'data': chartData2}]} />
         </Grid>
       </div>
     );

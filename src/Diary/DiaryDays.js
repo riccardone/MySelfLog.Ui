@@ -1,18 +1,17 @@
-import React, { Component } from "react";
+import React from 'react';
 import DiaryDay from "./DiaryDay";
 
-class DiaryDays extends Component {
-  render() {
-    let key = 0;
-    const urls = this.props.days.map(diaryDay => (
-      <DiaryDay
-        key={key++}
-        day={diaryDay}
-        iframeHeigh={this.props.iframeHeigh}
-      />
-    ));
-    return <ul className="list-group">{urls}</ul>;
-  }
+export default function DiaryDays(props) {
+  let key = 0;
+  const urls = props.days.map(diaryDay => (
+    <DiaryDay
+      key={key++}
+      day={diaryDay}
+      iframeHeigh={props.iframeHeigh}
+      series={props.series}
+    />
+  ));
+  return (
+    <ul className="list-group">{urls}</ul>
+  );
 }
-
-export default DiaryDays;

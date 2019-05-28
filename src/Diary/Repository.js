@@ -180,14 +180,7 @@ function buildCreateDiaryBody(obj) {
       .toDate()
       .toUTCString(),
     source: "myselflog-ui"
-  };
-
-  function cleanString(str) {
-    // Remove uri's and illegal chars
-    return str
-      .replace(/(?:https?|ftp):\/\/[\n\S]+/g, "")
-      .replace(/[|&;$%@"<>()+,]/g, "");
-  }
+  };  
 }
 
 function buildBody(state) {

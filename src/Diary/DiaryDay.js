@@ -1,101 +1,51 @@
-import React, { Component } from "react";
-import {ThemeContext} from '../theme.context';
+import React from 'react';
 import moment from "moment";
-import DataReader from "./dataReader";
+import {
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Scatter,
+  ScatterChart,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
 
-var reader = new DataReader();
+// TODO do the time series like this
+// https://github.com/recharts/recharts/issues/956#issuecomment-339279600
 
-class DiaryDay extends Component {
-  constructor(props) {
-    super(props);
-    // TODO Redo all using morris js
-    // https://stackoverflow.com/a/49377376
-    this.state = {
-      from: moment(this.props.day.from).valueOf(),
-      to: moment(this.props.day.to).valueOf(),
-      data: []
-    };
-    // preserve the initial state in a new object
-    this.baseState = this.state;
-  }
-
-  componentDidMount() {
-    reader.searchForADay(this.props.day).then(this.searchCompleted);
-  }
-
-  componentDidUpdate() {
-    reader.searchForADay(this.props.day).then(this.searchCompleted);
-  }
-
-  searchCompleted = resp => {
-    if (!resp) return;
-    var _this = this;
-    var points = [];
-    resp.diaryData.forEach(log => {
-      if (log.Value) {
-        points.push([moment(log.LogDate).valueOf(), log.Value, 0, 0]);
-      }
-      if (log.Calories) {
-        points.push([moment(log.LogDate).valueOf(), 0, 0, log.Calories]);
-      }
-      if (log.Terapy) {
-        points.push([moment(log.LogDate).valueOf(), 0, log.Terapy, 0]);
-      }
-    });
-    _this.setState({
-      data: points      
-    });
-  };
-
-  render() {
-    return (
-      <li className="list-group-item">
-        <p>Day {this.props.day.from}</p>
-        <ThemeContext.Consumer>
-          {theme => (
-            <section className={theme}>
-              <h2>ciao</h2>
-            </section>
-          )}
-        {/* <Resizable>
-          <ChartContainer timeRange={this.state.timerange}>
-            <ChartRow height="120">
-              <YAxis
-                id="axis1"
-                label="TOT"
-                min={0}
-                max={50}
-                //width="60"
-                type="linear"
-                format=","
-              />
-              <Charts>
-                <LineChart
-                  axis="axis1"
-                  series={this.state.timeseries}
-                  columns={["values"]}
-                  //style={style}
-                />
-                <LineChart
-                  axis="axis1"
-                  series={this.state.timeseries}
-                  columns={["terapies"]}
-                  //style={style}
-                />
-                <LineChart
-                  axis="axis1"
-                  series={this.state.timeseries}
-                  columns={["calories"]}
-                  //style={style}
-                />
-              </Charts>
-            </ChartRow>
-          </ChartContainer>
-        </Resizable> */}
-        </ThemeContext.Consumer>
-      </li>
-    );
-  }
+export default function DiaryDay(props) {
+  return (
+    <li className="list-group-item">
+      <p>Day {props.day.from}</p>
+      <section>
+        <ResponsiveContainer width='95%' height={props.iframeHeigh} >
+          <ScatterChart>
+            <XAxis
+              dataKey='time'
+              domain={['auto', 'auto']}
+              name='Time'
+              //tickFormatter={(unixTime) => moment(unixTime).format('HH:mm Do')}
+              tickFormatter={(unixTime) => moment(unixTime).format('HH:mm')}
+              type='number'
+            />
+            <YAxis dataKey='value' name='Value' />
+            {props.series.map((obj, i) => {
+              return <Scatter
+                data={obj.data}
+                line={{ stroke: '#8884d8' }}
+                fill="#8884d8"
+                lineJointType='monotoneX'
+                lineType='joint'
+                name={obj.name}
+              />;
+            })}
+            <CartesianGrid vertical={false} />
+            <Legend />
+            <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+          </ScatterChart>
+        </ResponsiveContainer>
+      </section>
+    </li >
+  );
 }
-
-export default DiaryDay;
