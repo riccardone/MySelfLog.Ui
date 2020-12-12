@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "auth0-js": "^9.13.2",
-    "bootstrap": "3.3.7",
+    "bootstrap": "3.4.1",
     "eslint-config-defaults": "^9.0.0",
     "moment": "^2.21.0",
     "react": "^16.2.0",
