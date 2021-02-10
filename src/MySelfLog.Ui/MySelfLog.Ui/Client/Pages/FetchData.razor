@@ -1,9 +1,11 @@
 ﻿@page "/fetchdata"
+@using System.Net.Http.Headers
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using MySelfLog.Ui.Shared
 @attribute [Authorize]
 @inject HttpClient Http
+@inject IAccessTokenProvider TokenProvider
 
 <h1>Weather forecast</h1>
 
@@ -45,7 +47,18 @@ else
     {
         try
         {
-            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+            using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, "WeatherForecast"))
+            {
+                var tokenResult = await TokenProvider.RequestAccessToken();
+
+                if (tokenResult.TryGetToken(out var token))
+                {
+                    requestMessage.Headers.Authorization =
+                        new AuthenticationHeaderValue("Bearer", token.Value);
+                    var response = await Http.SendAsync(requestMessage);
+                    forecasts = await response.Content.ReadFromJsonAsync<WeatherForecast[]>();
+                }
+            }
         }
         catch (AccessTokenNotAvailableException exception)
         {
