@@ -1,9 +1,12 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MySelfLog.Ui.Server
 {
@@ -20,15 +23,26 @@ namespace MySelfLog.Ui.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(options =>
+            var domain = Configuration["Auth0:Domain"];
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = domain;
+                    options.Audience = Configuration["Auth0:Audience"];
+                    // If the access token does not have a `sub` claim, `User.Identity.Name` will be `null`. Map it to a different claim by setting the NameClaimType below.
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = ClaimTypes.NameIdentifier
+                    };
+                });
+
+            services.AddAuthorization(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.Authority = Configuration["Auth0:Authority"];
-                options.Audience = Configuration["Auth0:ApiIdentifier"];
+                options.AddPolicy("read:messages", policy => policy.Requirements.Add(new HasScopeRequirement("read:messages", domain)));
             });
+
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();

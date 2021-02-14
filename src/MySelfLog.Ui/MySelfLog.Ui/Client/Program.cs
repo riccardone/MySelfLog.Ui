@@ -9,6 +9,7 @@ namespace MySelfLog.Ui.Client
 {
     public class Program
     {
+        // follow this? https://github.com/StefH/Blazor.WebAssembly.Authentication.Auth0
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
