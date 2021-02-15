@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>MySelfLog.Ui.Server-9535C7C5-CC14-4560-AB97-6B424914F1E0</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Client\MySelfLog.Ui.Client.csproj" />
+    <ProjectReference Include="..\Shared\MySelfLog.Ui.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
