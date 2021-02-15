@@ -47,6 +47,7 @@ else
     {
         try
         {
+            //forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, "WeatherForecast"))
             {
                 var tokenResult = await TokenProvider.RequestAccessToken();
